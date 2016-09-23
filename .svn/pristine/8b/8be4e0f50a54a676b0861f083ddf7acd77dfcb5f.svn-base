@@ -1,0 +1,128 @@
+@charset "utf-8";
+body,input,textarea,select,button,table{font-family:Malgun Ghothic, Dotum,'굴림',Gulim,AppleGothic,sans-serif; font-size:12px}
+body,div,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,form,fieldset,input,table,tr,th,td{margin:0;padding:0}
+h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%}
+ul,ol{list-style:none}
+fieldset,img{border:0; vertical-align:top;}
+address{font-style:normal}
+a{color:#333;text-decoration:none}
+a:hover,a:active,a:focus{color:#333;text-decoration:none}
+p,td{line-height:1.5em;text-align:justify}
+table{border-collapse:collapse}
+.hidden{position:absolute;left:-1000%;top:0;width:1px; height:1px; overflow:hidden; display:block;}
+
+/*header*/
+#header{height:45px;}
+.logo{float:left;padding-top:3px;}
+.logo a{display:inline-block;width:125px;height:40px;background:url('/shop/resources/images/admin_logo.png') no-repeat;text-indent:-9999px;overflow:hidden;}
+.bg_nav_color{background:#0a5c98;}
+ul.dropdownmenu {width: 935px;background: transparent;font: bold 11px/normal Malgun Gothic, Dotum, Verdana, Arial, Helvetica, sans-serif;}
+ul.dropdownmenu li {margin-top:7px;padding: 5px 10px;background-color:transparent !important;color: #fff;line-height: 22px;white-space: nowrap;}
+ul.dropdownmenu li.first {padding-left: 15px;}
+ul.dropdown li.last {padding-right: 15px;}
+ul.dropdownmenu li.hover,
+ul.dropdownmenu li:hover {color: #fff000;}
+ul.dropdownmenu a:link,
+ul.dropdownmenu a:visited	{ color: #fff; text-decoration: none; }
+ul.dropdownmenu a:hover		{ color: #fff000; }
+ul.dropdownmenu a:active	{ color: #0395cc; }
+ul.dropdownmenu ul li a{color:#0a5c98 !important;}
+ul.dropdownmenu ul li a:hover{color: #3fadf7 !important;}
+ul.dropdownmenu .menu{float:left;}
+ul.dropdownmenu .menu ul li{float:left;}
+ul.dropdownmenu .menu ul{display:none;position:absolute;top:30px;left:125px;}
+ul.dropdownmenu .menu a{font:bold 14px Malgun Gothic;}
+
+/*Table*/
+.tbl_modi{width:909px;text-align:center;}
+.tbl_full{text-align:center;border-spacing:0px;width:100%;}
+.tbl_full thead,
+.tbl_modi thead{background:#CDEDEE;color:#0a5c98;}
+.tbl_full thead th,
+.tbl_modi thead th{height:30px;border-left:1px solid #BBBBBB;border-bottom:1px solid #BBBBBB;font:bold 11px Malgun Gothic;}
+.tbl_full thead th:first-child,
+.tbl_modi thead th:first-child{border-left:0 none;}
+.tbl_modi thead th.last_one{/*border-right:1px solid #CDEDEE;*/}
+.tbl_full tbody,
+.tbl_modi tbody{background:#fff;}
+.tbl_full  tr td,
+.tbl_modi  tr td{border-left:1px solid #BBBBBB;border-bottom:1px solid #BBBBBB;padding: 2px 0px; height:23px; text-align:center}
+.tbl_full  tr td:first-child,
+.tbl_modi  tr td:first-child{border-left:0 none;}
+.title_fix{width:909px;margin:5px auto;}
+.tbl_full th,
+.tbl_modi th{background:#E6E6E6;color:#465E70;border-bottom: 1px solid #BBBBBB;}
+.tbl_full th {border-left: 1px solid #BBBBBB;}
+.tbl_full th:first-child{border-left:0}
+.tbl_full th.the_charge{border-left:1px solid #BBBBBB;}
+
+
+/* Button Reset */
+.positive{background:#5dc434;}
+.negative{background:#fe251e;}
+.neutral{background:#3fadf7;}
+.error, .red, .minus{color:#E60303;}
+.blue, .plus{color:#0072EE}
+.gray{color:#bbb;}
+.button,
+.button a,
+.button button,
+.button input { position:relative; margin:0; display:-moz-inline-stack; display:inline-block; text-decoration:none !important; border:0; font-size:11px; font-family: Malgun Gothic, Tahoma, Sans-serif; white-space:nowrap; overflow:visible; color:#333;}
+.button { height:23px; padding:0 10px; margin-right:2px;cursor: pointer;}
+.button a,
+.button button,
+.button input{ left:2px; vertical-align:top; cursor:pointer;}
+.button.spacing{margin-right:5px;}
+.button.spacing_left{margin-left:5px;}
+/* Button Size */
+.button.large { height:29px;line-height:29px;}
+.button.xLarge { height:35px;line-height:35px;}
+.button.small { height:18px;line-height:18px;}
+.button a,
+.button button,
+.button input { height:23px; padding:0 10px 0 8px; font-size:12px; line-height:23px; background-position:right top;}
+.button.large a,
+.button.large button,
+.button.large input { height:30px; padding:0 10px 0 8px; font-size:16px; line-height:29px; background-position:right -30px;}
+.button.xLarge a,
+.button.xLarge button,
+.button.xLarge input { height:35px; padding:0 10px 0 8px; font-size:20px; line-height:35px; background-position:right -65px;}
+.button.small a,
+.button.small button,
+.button.small input { height:18px; padding:0 6px 0 4px; font-size:11px; line-height:18px; background-position:right -107px;}
+
+/* Button Text Color */
+.button *:hover,
+.button *:active,
+.button *:focus{ color:#690;}
+.button.positive,
+.button.positive a,
+.button.positive button,
+.button.positive input { color:#fff;}
+.button.positive:hover,
+.button.positive:active,
+.button.positive:focus{ color:#ff0;}
+.button.black,
+.button.black a,
+.button.black button,
+.button.black input { color:#fff;}
+.button.black *:hover,
+.button.black *:active,
+.button.black *:focus{ color:#ff0;}
+.button.negative,
+.button.negative a,
+.button.negative button,
+.button.negative input { color:#fff;}
+.button.negative:hover,
+.button.negative:active,
+.button.negative:focus{ color:#ff0;}
+.button.neutral,
+.button.neutral a,
+.button.neutral button,
+.button.neutral input { color:#fff;}
+.button.neutral:hover,
+.button.neutral:active,
+.button.neutral:focus{ color:#ff0;}
+.button.v_btn_modify[value=추가]{background:#5dc434;}
+
+

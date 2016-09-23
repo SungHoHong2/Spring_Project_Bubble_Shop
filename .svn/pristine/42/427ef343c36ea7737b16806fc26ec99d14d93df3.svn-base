@@ -1,0 +1,305 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="cart_area ">
+
+                                        <div class="payment_step">
+    <ul>
+    <li class="step1"><strong class="">1. 카트</strong><em class="count"><span>0</span></em><span class="subscription">구매하실 상품을 선택해 주세요.</span></li>
+    <li class="step2"><span class="arr"></span><strong class="on">2. 주문/결제</strong><span class="subscription">구매하실 상품을 결제해 주세요.</span></li>
+    <li class="step3"><span class="arr"></span><strong class="">3. 결제완료</strong><span class="subscription">결제가 완료되었습니다.</span></li>
+    </ul>
+</div>
+<div class="tbl_option">
+    <span class="notice">상품수량 및 옵션변경은 상품 상세페이지 또는 카트에서 가능합니다.</span>
+    <a href="/deal/74946277" class="btn_prevpage">이전페이지</a>
+</div>
+
+<table summary="카트 리스트" class="tbl_cart payment">
+    <caption>카트 리스트</caption>
+    <colgroup>
+        <col width="148"><col width="482"><col width="109"><col width="80"><col width="*">
+    </colgroup>
+    <thead>
+    <tr>
+        <th scope="col" colspan="2" class="deal_info">상품정보</th>
+        <th scope="col" class="amounts">상품금액</th>
+        <th scope="col" class="disc">할인</th>
+        <th scope="col" class="delivery">배송</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr name="deal_row" class="last">
+        <td class="thmb"><a href="/deal/74946277#content_start" target="_blank" class="thmb_inner"><img src="https://img.tmon.co.kr/deals/7494/74946277/74946277_around_a1889_1400741484production.jpg" width="106" height="71" alt="temp thmb">
+</a></td>
+        <td class="deal_info">
+            <a href="/deal/74946277#content_start" target="_blank" class="h_deal" title="명품 썬 모음전">명품 썬 모음전            <span class="sico_tag">
+                </span></a>
+            <ul class="uio_option_area">
+                        <li>
+                <span class="option"> 04.비오템 라 솔레르 SPF 15 UVA/UVB 프로텍션 멜팅 밀크 75ml </span>
+                <span class="amounts"><em>27,500</em>원</span>
+                <span class="uio_option_cnt">
+                    <span class="uio_option_input">1</span>
+                </span>
+                <span class="total"><em>27,500</em>원</span>
+                <input type="hidden" name="opt_message[]" value="">
+                <input type="hidden" name="deal_info[]" value="75641161|1|27500">
+                </li>
+                        </ul>
+            </td>
+        <td class="amounts"><span><em>27,500</em>원</span></td>
+        <td class="disc">
+                        <div class="coupon_guide_wrapper" style="display: none;">
+                                <div class="coupon_guide" onclick="openCouponLayer(74946277, 1, 27500);return false">
+                    <span class="bu"></span>
+                    <div class="inner">
+                        <nobr>쿠폰으로 <strong class="pr">할인</strong> 받으세요!</nobr>
+                    </div>
+                </div>
+            </div>
+            
+            <span id="coupon_amount_74946277_1" class="saving_amounts">-<em>3,000</em>원</span>
+            <a href="#" name="btn_coupon" onclick="openCouponLayer(74946277, 1, 27500);return false" class="btn_coupon_modif">쿠폰적용</a>
+            
+        </td>
+        <td class="delivery">
+                                    <span class="">직접수령</span>
+            </td>
+    </tr>
+        </tbody>
+</table>
+
+<div id="div_calculate_area" class="calculate_area calculate_area_v2">
+    <div class="deal_price">
+        <div class="h_area"><strong>상품금액</strong></div>
+        <div class="result_area"><em>27,500</em><span class="won">원</span></div>
+    </div>
+    <span class="minus">-</span>
+    <div class="disc_price">
+        <div class="h_area">
+            <strong>할인금액</strong>
+            </div>
+        <div class="result_area"><em id="total_discount_amount">3,000</em><span class="won">원</span></div>
+    </div>
+    <span class="plus">+</span>
+    <div class="delivery_price">
+        <div class="h_area"><strong>배송비</strong></div>
+        <div class="result_area"><em>0</em><span class="won">원</span></div>
+    </div>
+    <span class="equal">=</span>
+    <div class="payment_price">
+        <div class="h_area"><strong>결제 예정 금액</strong></div>
+        <div class="result_area"><em id="total_cash_amount">24,500</em><span class="won">원</span></div>
+        <div class="lpop_saving" style="top:19px;right:24px">
+                        총 절약금액: <em id="save_amount">3,000</em>원
+            <span class="arr"></span>
+        </div>
+        <div class="benefit" id="div_cart_benefit_amount" style="display:none;">
+            <span class="tit">구매시 혜택</span>
+            <strong class="point">적립금 <span><em id="total_benefit_amounts">0</em>원</span> <a style="cursor:pointer" onclick="openBenefitLayer();" name="btn_benefit" class="btn_detail">상세보기</a></strong>
+        </div>
+    </div>
+</div>
+<div class="detail_info_new" style="margin-top:50px">
+                <h4 class="h_buyer">구매자/기부자/예약자 정보</h4>
+                <table summary="구매자정보" class="tbl">
+                <caption>구매자정보</caption>
+                <colgroup>
+                <col width="134"><col width="*">
+                </colgroup>
+                    <tbody>
+                <tr class="frst">
+                <th scope="row"><span class="user_name">이름</span></th>
+                <td id="uName" style="font-weight:bold">민경훈</td>
+                    </tr>
+                    <tr>
+                <th scope="row"><span class="user_contact">연락처</span></th>
+                <td id="uTel">010-6396-1457</td>
+                    </tr>
+                <tr class="last">
+                <th scope="row"><span class="user_email">이메일</span></th>
+                    <td id="uEmail">fuckingtimo@hotmail.com</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>                        
+
+                        
+            
+                        
+                        <div class="detail_info_new delivery" id="d_type">
+                <h4 class="h_delivery">배송지정보</h4>
+                <table  summary="배송지정보" class="tbl">
+                <caption>구매자정보</caption>
+                <colgroup>
+                <col width="134"><col width="*">
+                </colgroup>
+                <tbody>
+                <tr class="frst">
+                <th scope="row"><span class="user_place">배송지 선택</span></th>
+                <td>
+                    <div class="chk_place">
+                        <input type="radio" id="ss1" name="sel_addr" class="rdo" value="member" checked="checked" onclick="chkAddress('d_type');"><label for="ss1" style="margin-right:15px">구매자 정보와 동일</label>
+                        <input type="radio" id="ss2" name="sel_addr" class="rdo" value="new" onclick="chkAddress('d_type');"><label for="ss2" style="margin-right:15px">새로운 배송지</label>
+
+                        <div class="recent_box">
+                            <input type="radio" id="ss3" name="sel_addr" class="rdo" value="recent" onclick="chkAddress('d_type');"><label for="ss3">최근 배송지</label>
+                            <div class="ly_recent_add" id="recent_address_list" style="display:none">
+                                <ul>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                </tr>
+                <tr>
+                <th scope="row"><span class="user_name">이름</span></th>
+                <td><input type="text" id="rcv_name" value="민경훈" class="txt" style="width:223px" maxlength="20"></td>
+                    </tr>
+                    <tr>
+                <th scope="row"><span class="user_contact">연락처</span></th>
+                    <td>
+                        <select style="width:51px" id="rcv_mo1">
+                                                    <option>010</option>
+                        
+                                                    <option>011</option>
+                        
+                                                    <option>016</option>
+                        
+                                                    <option>017</option>
+                        
+                                                    <option>018</option>
+                        
+                                                    <option>019</option>
+                        
+                                                    <option>0505</option>
+                        
+                                                    <option>0502</option>
+                        
+                        </select>
+                    - <input type="text" id="rcv_mo2" value="" class="txt" style="width:64px" onkeyup="nextFocus(this, 4)" maxlength="4">
+                    - <input type="text" id="rcv_mo3" value="" class="txt" style="width:64px" maxlength="4">
+                    
+                    </td>
+                    </tr>
+                <tr class="address">
+                	<th scope="row"><span class="user_address">주소</span></th>
+                	<td>
+	                    <input type="text" id="rcv_zip1" value="" class="txt" style="width:37px" onclick="zipcode()" readonly="readonly"> -
+	                    <input type="text" id="rcv_zip2" value="" class="txt" style="width:37px" onclick="zipcode()" readonly="readonly">
+	                    <a onclick="zipcode()" class="btn_cmn3"><span class="in">우편번호</span></a>
+	                    <p class="detail_address">
+	                        <input type="text" id="rcv_addr1" class="txt address" style="width:223px" value="" onclick="zipcode()" readonly="readonly">
+	                        <input type="text" id="rcv_addr2" class="txt address" style="width:306px" value="">
+	                    </p>
+	                    <p class="caution2">입력하신 주소를 회원정보에도 동일하게 저장하시겠습니까?
+	                    <a href="#" class="btn_update_address">저장하기</a></p>
+                    </td>
+                    </tr>
+                <tr class="last">
+                <th scope="row"><span class="user_memo">배송 메모</span></th>
+                <td>
+                    <textarea rows="5" cols="50" id="rcv_said" maxlength="50" style="width:554px" onclick="chkTextLength(this, '50', 'd1')" onkeyup="chkTextLength(this, '50', 'd1')"></textarea><span>(<em class="rcv_said_count_d1">3</em>/50자)</span>
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>
+            
+                        <div class="payment_total_section detail_info_new" id="payMethodDiv">
+                <h4 class="h_info_ipt">결제정보입력</h4>
+                <p class="buy_method_chk"></p>
+                <table  class="tbl">
+                <colgroup>
+                	<col width="134">
+                	<col width="">
+                </colgroup>
+                    <caption>결제정보입력</caption>
+                                        <tbody>
+                        <tr class="payment_choice">
+                            <th scope="row" ><span class="payment_choice">결제수단 선택</span></th>
+                            <td>
+                                <div class="chk_place">
+                                    <div class="method">
+                                        <input type="radio" id="CARD" name="pay_method" value="CARD" class="rdo" onclick="setTotalAmount();" checked="checked"><label id="lblCard" for="CARD">신용카드</label>
+                                    </div>
+                                    <div class="method">
+                                        <input type="radio" id="VBANK" name="pay_method" class="rdo" value="VBANK" onclick="alertMsg('VBANK');setTotalAmount();"><label id="lblVbank" for="VBANK">무통장입금</label>
+                                            </div>
+                                </div>
+                                                                    <!-- //신한 올댓 경유 안내 문구 출력 -->
+                                                                                                                                                        <div id="escrow" style="display:none; margin-top:-2px;">
+                                            <p><input type="checkbox" id="is_escrow" name="is_escrow" value="ATE" class="chk"><label for="is_escrow"> 에스크로 사용</label></p>
+                                        </div>
+                                                                                <div class="txt_info" style="display: none;" id="no_bank_noti">
+                                            <span id="no_bank_txt"></span>
+                                        </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="tr_bank" style="display: table-row;">
+                            <th scope="row"><span class="bank">입금은행</span></th>
+                            <td>
+                                <select title="입금은행 선택" name="vb_bankcode" class="vm" style="cursor:pointer">
+                                    <option value="">은행을 선택해주세요</option>
+                                    <option value="20">우리</option>
+                                    <option value="32">부산</option>
+                                    <option value="31">대구</option>
+                                    <option value="05">외환</option>
+                                    <option value="71">우체국</option>
+                                    <option value="06">국민</option>
+                                    <option value="07">수협</option>
+                                    <option value="81">하나</option>
+                                    <option value="39">경남</option>
+                                    <option value="26">신한</option>
+                                    <option value="11">농협</option>
+                                    <option value="03">기업</option>
+                                </select>
+                                <span class="txt_type1"></span>
+                            </td>
+                        </tr>
+                        <tr class="tr_bank" style="display: table-row;">
+                            <th scope="row"><span class="depositor">입금자</span></th>
+                            <td><input type="text" name="vb_accountowner" title="입금자명" value="민경훈" class="txt" style="width:141px"></td>
+                        </tr>
+                        <tr class="tr_bank" style="display: table-row;">
+                            <th scope="row"><span class="account_date">입금기한</span></th>
+                            <td>2014/05/30 00:00:00까지</td>
+                        </tr>
+                        
+                        <tr style="display: none;">
+                            <th scope="row"><span class="install_mon">할부개월</span></th>
+                            <td>
+                                <div class="uio_option_lst" id="uio_option_lst_mon" style="width: 117px; display: none;">
+                                    <a class="uio_option_value" style="cursor:pointer"><a style="cursor:pointer">일시불</a></a>
+                                    <ul class="uio_scroll" id="uio_scroll_mon" style="width: 115px; top: 20px; display: none;" tabindex="-1">
+								<li mcode="00"><a style="cursor: pointer">일시불</a></li>
+							</ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="price_area" id="totalDiv">
+                    <h4 class="h_total">결제 총 금액</h4>
+                    <ul class="lst">
+                                        <li><strong class="tit" id="total_buy_num">총 주문금액</strong><span class="price"><em id="total_order_amount">24,500</em> 원</span></li>
+                    <li><strong class="tit">적립금사용</strong><span class="price"><em id="userPoint">0</em> 원</span></li>
+                    </ul>
+                    <div class="total_price">
+                        <strong class="tit">총 결제 금액</strong>
+                        <span class="price" id="totalPay">24,500</span>
+                    </div>
+                    <div class="option" id="discountEvent"></div>
+                </div>
+            </div>
+            <div class="agreement">
+            	<div class="btn_section">
+                    <a href="#"  class="btn_payment"><span class="hidden">결제하기</span></a>
+                    <a href="#"  class="btn_cancel"><span class="hidden">취소</span></a>
+                </div>
+            </div>    
+</div>
+
+

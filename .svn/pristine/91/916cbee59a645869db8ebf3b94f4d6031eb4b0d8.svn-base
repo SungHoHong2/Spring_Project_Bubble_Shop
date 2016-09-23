@@ -1,0 +1,23 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.ServiceRepository;
+
+
+@Controller
+public class GoodsController {
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request)
+	{
+		Object res	= bean;
+		switch(service)
+		{
+		case "main":
+			res=repository.shopHome(bean);
+		}
+		return res;
+	}
+}

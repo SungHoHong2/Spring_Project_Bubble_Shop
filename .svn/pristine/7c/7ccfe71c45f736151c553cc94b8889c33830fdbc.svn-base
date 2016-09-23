@@ -1,0 +1,423 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
+    
+<script type="text/javascript">
+
+	if ("${bean.pay_flag}" == "N")
+	{
+		alert("${bean.pay_flag}");
+	}
+	
+	$(document).ready(function(){
+
+		var frm = document.frm;
+		
+		re_url = function()
+		{
+			if (confirm("이전 페이지로 이동하시겠습니까?"))
+			{
+				if ('${bean.prev_page}' == 'cart')
+				{
+					$("#frm").attr("action", "/shop/bs/user/buy/cart").submit();
+				}
+				else
+				{
+					$("#frm").attr("action", "/shop/bs/user/shop/goodsdetail").submit();
+				}
+			}
+		}
+		
+		$("#sel_quick").change(function(){
+			
+			$("#pay_pay3").val($(this).val());
+			
+			if ($("#pay_pay3").val() == "0")
+			{
+				$("#d_type").hide();
+			}
+			else
+			{
+				$("#d_type").show();	
+			}
+			
+			price_con();
+		
+		});
+		
+		price_con = function(){
+			
+			$(".lpop_saving").hide();
+			
+			$("#pay_pay4").val(parseInt($("#pay_pay1").val()) + parseInt($("#pay_pay2").val()) + parseInt($("#pay_pay3").val()));
+			
+			for (var i = 0; i < $(".result_area").length; i++)
+			{
+				$(".result_area > em").eq(i).html(FormatNumber($("#pay_pay" + (i+1)).val()));
+			}
+			
+			if ($("#pay_pay2").val() != 0)
+			{
+				$("#save_amount").html(FormatNumber($("#pay_pay2").val())).show();
+				$(".lpop_saving").show();
+			}
+			
+			$("#bc_price").val($("#pay_pay2").val());
+			
+			$("#totalPay").html(FormatNumber($("#pay_pay4").val()));
+			
+		}
+		
+		
+		// 쿠폰
+		coupon_ac = function()
+		{
+			if ($("#bc_id").val() == "")
+			{
+				$("#bc_id").val("Y");
+				$(".saving_amounts").show();
+				$(".saving_amounts").html("-<em>2,000</em>원");
+			}
+			else
+			{
+				$("#bc_id").val("");
+			}
+			
+			
+			if ($("#bc_id").val() == "")
+			{
+				$("#img_cp").attr("src", "/shop/resources/images/btn_coupon.png").attr("alt", "쿠폰사용");
+			}
+			else
+			{
+				$("#img_cp").attr("src", "/shop/resources/images/btn_coupon_c.png").attr("alt", "쿠폰변경");
+			}
+			
+			window.open("", "pop_coupon", "width=400, height=490, toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes, left=300, top=200")
+		}
+		
+		
+		
+		zipcode = function()
+		{
+			window.open("", "pop_zipcode", "width=400, height=490, toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes, left=300, top=200")
+		}
+		
+		phone_chk = function()
+    	{
+    		var regexp = /^[0-9]{3,20}$/i;
+
+   			if(!regexp.test($("#hp2").val()))
+   			{    
+   				alert("휴대폰 중간자리는 숫자만 입력 가능 합니다!");
+   				$("#hp2").focus();
+   				return false;
+   			}
+   			
+   			if(!regexp.test($("#hp3").val()))
+   			{    
+   				alert("휴대폰 끝자리는 숫자만 입력 가능 합니다!");
+   				$("#hp3").focus();
+   				return false;
+   			}
+   			
+   			return true;
+    	}
+		
+		
+		btn_buy = function()
+		{
+			if ($("#pay_pay3").val() != "0")
+			{
+				if (form_chk(frm, "bq_memo"))
+				{
+					$("#bg_hp").val($("#hp1").val() + "-" + $("#hp2").val() + "-" + $("#hp3").val());
+					$("#bg_zip").val($("#zip1").val() + "-" + $("#zip2").val());
+					
+					if (!phone_chk())
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;	
+				}
+			}
+			$("#frm").attr("action", "payok").submit();
+		}
+		
+		btn_cancel = function()
+		{
+			if (confirm("결제를 취소 하시겠습니까?"))
+			{
+				$("#g_code").val("${bean.g_code }");
+				$("#frm").attr("action", "/shop/bs/user/shop/goodsdetail").submit();
+			}
+		}
+		
+		$("[name='deal_total_amount']").html(FormatNumber($("[name='deal_total_amount']").html()));
+		
+		price_con();
+
+	});
+
+</script>
+
+<form id="frm" name="frm" method="post" action="">
+<input type="hidden" id="g_code" name="g_code" value="${bean.a_g_code }" />
+<input type="hidden" name="a_goods_id" value="${bean.g_code }" />
+<input type="hidden" id="a_bgd_id" name="a_bgd_id" value="${bean.a_bgd_id}" />
+<input type="hidden" id="a_bgd_cnt" name="a_bgd_cnt" value="${bean.a_bgd_cnt}" />
+<input type="hidden" id="a_bgd_price" name="a_bgd_price" value="${bean.a_bgd_price}" />
+<input type="hidden" id="bb_price" name="bb_price" value="${bean.bb_price}" />
+
+<!-- 총 결제금액, 할인금액, 배송비, 결제예정금액 -->
+<br />
+<input type="hidden" id="pay_pay1" name="pay_pay1" value="${bean.bb_price }" />
+<input type="hidden" id="pay_pay2" name="pay_pay2" value="0" />
+<input type="hidden" id="pay_pay3" name="pay_pay3" value="2500" />
+<input type="hidden" id="pay_pay4" name="pay_pay4" value="0" />
+
+<input type="hidden" id="bc_id" name="bc_id" value="" />
+<input type="hidden" id="bc_price" name="bc_price" value="0" />
+
+<input type="hidden" id="bs_id" name="bs_id" value="${session_bsid }" />
+<input type="hidden" id="bs_userid" name="bs_userid" value="${session_userid }" />
+
+<input type="hidden" id="bg_hp" name="bg_hp" />
+<input type="hidden" id="bg_zip" name="bg_zip" />
+
+
+<div class="cart_area ">
+
+<div class="payment_step">
+    <ul>
+    <li class="step1"><strong class="">1. 카트</strong><em class="count"><span>0</span></em><span class="subscription">구매하실 상품을 선택해 주세요.</span></li>
+    <li class="step2"><span class="arr"></span><strong class="on">2. 주문/결제</strong><span class="subscription">구매하실 상품을 결제해 주세요.</span></li>
+    <li class="step3"><span class="arr"></span><strong class="">3. 결제완료</strong><span class="subscription">결제가 완료되었습니다.</span></li>
+    </ul>
+</div>
+<div class="tbl_option">
+    <span class="notice">상품수량 및 옵션변경은 상품 상세페이지 또는 카트에서 가능합니다.</span>
+    <a href="#none" onclick="re_url(); return false;" class="btn_prevpage">이전페이지</a>
+</div>
+
+<table summary="카트 리스트" class="tbl_cart payment">
+    <caption>카트 리스트</caption>
+    <colgroup>
+        <col width="148"><col width="482"><col width="109"><col width="80"><col width="*">
+    </colgroup>
+    <thead>
+    <tr>
+        <th scope="col" colspan="2" class="deal_info">상품정보</th>
+        <th scope="col" class="amounts">상품금액</th>
+        <th scope="col" class="disc">할인</th>
+        <th scope="col" class="delivery">배송</th>
+    </tr>
+    </thead>
+    <tbody>
+    	${bean.html_view }
+	</tbody>
+</table>
+
+<div id="div_calculate_area" class="calculate_area calculate_area_v2">
+    <div class="deal_price">
+        <div class="h_area"><strong>상품금액</strong></div>
+        <div class="result_area"><em></em><span class="won">원</span></div>
+    </div>
+    <span class="minus">-</span>
+    <div class="disc_price">
+        <div class="h_area">
+            <strong>할인금액</strong>
+            </div>
+        <div class="result_area"><em>0</em><span class="won">원</span></div>
+    </div>
+    <span class="plus">+</span>
+    <div class="delivery_price">
+        <div class="h_area"><strong>배송비</strong></div>
+        <div class="result_area"><em></em><span class="won">원</span></div>
+    </div>
+    <span class="equal">=</span>
+    <div class="payment_price">
+        <div class="h_area"><strong>결제 예정 금액</strong></div>
+        <div class="result_area"><em></em><span class="won">원</span></div>
+        <div class="lpop_saving" style="top:19px;right:24px" style="display:none">
+                        총 절약금액: <em id="save_amount">0</em>원
+            <span class="arr"></span>
+        </div>
+    </div>
+</div>
+
+
+<c:if test="${session_name != ''}">
+<div class="detail_info_new" style="margin-top:50px">
+                <h4 class="h_buyer">구매자/기부자/예약자 정보</h4>
+                <table summary="구매자정보" class="tbl">
+                <caption>구매자정보</caption>
+                <colgroup>
+                <col width="134"><col width="*">
+                </colgroup>
+                    <tbody>
+                <tr class="frst">
+                <th scope="row"><span class="user_name">이름</span></th>
+                <td id="uName" style="font-weight:bold">${bean.userinfo.bs_name }</td>
+                    </tr>
+                    <tr>
+                <th scope="row"><span class="user_contact">연락처</span></th>
+                <td id="uTel">${bean.userinfo.bs_hp }</td>
+                    </tr>
+                <tr class="last">
+                <th scope="row"><span class="user_email">이메일</span></th>
+                    <td id="uEmail">${bean.userinfo.bs_email }</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>                        
+</c:if>
+                        
+            
+                        
+			<div class="detail_info_new delivery" id="d_type">
+                <h4 class="h_delivery">배송지정보</h4>
+                <table  summary="배송지정보" class="tbl">
+                <caption>구매자정보</caption>
+                <colgroup>
+                <col width="134"><col width="*">
+                </colgroup>
+                <tbody>
+                <c:choose>
+	                <c:when test="${session_userid != '' }">
+	                    <tr class="frst">
+			                <th scope="row"><span class="user_place">배송지 선택</span></th>
+			                <td>
+			                    <div class="chk_place">
+			                        <input type="radio" id="ss1" name="sel_addr" class="rdo" value="member" checked="checked"><label for="ss1" style="margin-right:15px">구매자 정보와 동일</label>
+			                        <input type="radio" id="ss2" name="sel_addr" class="rdo" value="new"><label for="ss2" style="margin-right:15px">새로운 배송지</label>
+			
+			                        <div class="recent_box">
+			                            <input type="radio" id="ss3" name="sel_addr" class="rdo" value="recent"><label for="ss3">최근 배송지</label>
+			                        </div>
+			                    </div>
+			                </td>
+		                </tr>
+		                <tr>
+                			<th scope="row"><span class="user_name">이름</span></th>
+                			<td><input type="text" id="bg_name" name="bg_name" title="이름" value="${bean.userinfo.bs_name }" class="txt" style="width:223px" maxlength="20"></td>
+                    	</tr>
+	                </c:when>
+	                <c:otherwise>
+	                	<tr class="frst">
+                			<th scope="row"><span class="user_name">이름</span></th>
+                			<td><input type="text" id="bg_name" name="bg_name" title="이름" value="${bean.userinfo.bs_name }" class="txt" style="width:223px" maxlength="20"></td>
+                    	</tr>
+                   	</c:otherwise>
+				</c:choose>
+                <tr>
+                    <tr>
+                <th scope="row"><span class="user_contact">연락처</span></th>
+                    <td>
+                        <select style="width:51px" id="hp1" name="hp1" title="휴대폰 앞자리">
+                             <option value="010" <c:if test="${bean.h_hp1 == '010'}">selected</c:if>>010</option>
+                             <option value="011" <c:if test="${bean.h_hp1 == '011'}">selected</c:if>>011</option>
+                             <option value="016" <c:if test="${bean.h_hp1 == '016'}">selected</c:if>>016</option>
+                             <option value="017" <c:if test="${bean.h_hp1 == '017'}">selected</c:if>>017</option>
+                             <option value="018" <c:if test="${bean.h_hp1 == '018'}">selected</c:if>>018</option>
+                             <option value="019" <c:if test="${bean.h_hp1 == '019'}">selected</c:if>>019</option>
+                             <option value="0505" <c:if test="${bean.h_hp1 == '0505'}">selected</c:if>>0505</option>
+                             <option value="0502" <c:if test="${bean.h_hp1 == '0502'}">selected</c:if>>0502</option>
+                        </select>
+                    - <input type="text" id="hp2" name="hp2" value="${bean.h_hp2 }" title="휴대폰 중간자리" class="txt" style="width:64px" maxlength="4">
+                    - <input type="text" id="hp3" name="hp3" value="${bean.h_hp3 }" title="휴대폰 끝자리" class="txt" style="width:64px" maxlength="4">
+                    
+                    </td>
+                    </tr>
+                <tr class="address">
+                	<th scope="row"><span class="user_address">주소</span></th>
+                	<td>
+	                    <input type="text" id="zip1" name="zip1" value="${bean.h_zip1 }" class="txt" style="width:37px" title="우편번호 앞자리" maxlength="3"> -
+	                    <input type="text" id="zip2" name="zip2" value="${bean.h_zip2 }" class="txt" style="width:37px" title="우편번호 뒷자리" maxlength="3">
+	                    <a onclick="zipcode()" class="btn_cmn3"><span class="in">우편번호</span></a>
+	                    <p class="detail_address">
+	                        <input type="text" id="bg_address" name="bg_address" class="txt address" style="width:223px" value="${bean.userinfo.bs_address }" title="주소" maxlength="200">
+	                        <input type="text" id="bg_address2" name="bg_address2" class="txt address" style="width:306px" value="${bean.userinfo.bs_address2 }" title="상세주소" maxlength="200" />
+	                    </p>
+                    </td>
+                    </tr>
+                <tr class="last">
+                <th scope="row"><span class="user_memo">배송 메모</span></th>
+                <td>
+                    
+                    <input type="text" id="bq_memo" name="bq_memo" maxlength="100" class="txt address" style="width:547px" value="">
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <br />
+                </div>
+            
+                        <div class="payment_total_section detail_info_new" id="payMethodDiv">
+                <h4 class="h_info_ipt">결제정보입력</h4>
+                <p class="buy_method_chk"></p>
+                <table  class="tbl">
+                <colgroup>
+                	<col width="134">
+                	<col width="">
+                </colgroup>
+                    <caption>결제정보입력</caption>
+                                        <tbody>
+                        <tr class="payment_choice">
+                            <th scope="row" ><span class="payment_choice">결제수단 선택</span></th>
+                            <td>
+                                <div class="chk_place">
+                                    <div class="method">
+                                        <input type="radio" id="bp_price_type_c" name="bp_price_type" value="1" class="rdo" checked><label id="lblCard" for="CARD">신용카드</label>
+                                    </div>
+                                    <div class="method">
+                                        <input type="radio" id="bp_price_type_H" name="bp_price_type" value="2" class="rdo"><label id="lblVbank" for="VBANK">무통장입금</label>
+                                            </div>
+                                </div>
+                                                                    <!-- //신한 올댓 경유 안내 문구 출력 -->
+                                                                                                                                                        <div id="escrow" style="display:none; margin-top:-2px;">
+                                            <p><input type="checkbox" id="is_escrow" name="is_escrow" value="ATE" class="chk"><label for="is_escrow"> 에스크로 사용</label></p>
+                                        </div>
+                                                                                <div class="txt_info" style="display: none;" id="no_bank_noti">
+                                            <span id="no_bank_txt"></span>
+                                        </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                       <!--
+                        <tr class="tr_bank" style="display: table-row;">
+                            <th scope="row"><span class="bank">입금은행</span></th>
+                            <td>
+								<select title="입금은행 선택" id="bs_bank" name="bs_bank" class="vm" style="cursor:pointer">
+				                    <option value="">은행을 선택해주세요</option>
+				                    <c:forEach items="${bean.bank }" var="bank">
+				                    	<option value="${bank.bbl_code }">${bank.bbl_name }</option>
+				                    </c:forEach>
+				                </select>
+                                <span class="txt_type1"></span>
+                            </td>
+                        </tr>
+                        <tr class="tr_bank">
+                            <th scope="row"><span class="depositor">입금자</span></th>
+                            <td><input type="text" name="vb_accountowner" title="입금자명" value="${session_name }" class="txt" style="width:141px"></td>
+                        </tr>
+                      -->
+                    </tbody>
+                </table>
+                <div class="price_area" id="totalDiv">
+					<strong style="display:block;float:left;width:85px;height:17px;margin-top:7px;background:url( https://img.tmon.co.kr/static/img/sp_payment.png?v=1401181116 ) no-repeat -370px -105px;text-indent:-9999px">총 결제 금액</strong>
+					<span style="float:right;font-weight:bold;font-size:18px;font-family:tahoma;color:#ff1193" id="totalPay"></span>
+                </div>
+            </div>
+            <div class="agreement">
+            	<div class="btn_section">
+                    <a href="#none" class="btn_payment" onclick="btn_buy(); return false;"><span class="hidden">결제하기</span></a>
+                    <a href="#none" class="btn_cancel" onclick="btn_cancel(); return false;"><span class="hidden">취소</span></a>
+                </div>
+            </div>    
+</div>
+</form>

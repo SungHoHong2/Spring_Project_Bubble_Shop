@@ -1,0 +1,42 @@
+package com.bubble.shop.service;
+
+
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.bubble.shop.model.Bean;
+
+
+
+public class FileDelete {
+	
+	
+	public boolean fileDelete(Bean bean, HttpServletRequest request)
+	{
+
+		String folder="/resources/upfile";
+		//String path = request.getRealPath(folder);
+		String path = "c:\\sts\\b_shop\\src\\main\\webapp" + folder;
+		
+		
+		String fileName = bean.getNotice_upfile();
+		
+		
+		 if(fileName == null || fileName.equals("null") || fileName.equals(""))
+		 {
+			 System.out.println("파일 없음");
+			 return false;
+		 }
+		 
+		
+		 File f = new File(path+"\\"+fileName);
+	
+		 f.delete();
+		
+		 
+
+		
+		return true;
+	}
+}

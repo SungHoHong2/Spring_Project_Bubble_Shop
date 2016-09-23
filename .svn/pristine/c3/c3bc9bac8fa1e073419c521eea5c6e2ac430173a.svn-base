@@ -1,0 +1,304 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="signup_wp">
+            <div class="steps">
+                <!-- [D] 선택된 단계 span에 on 클래스 추가 -->
+                <ol>
+                <li class="step1"><span class="sp_sup on">Step01 - 본인 인증</span><em class="sp_sup ar"></em></li>
+                <li class="step2"><span class="sp_sup">Step02 - 정보 입력 및 약관동의</span><em class="sp_sup ar"></em></li>
+                <li class="step3"><span class="sp_sup">Step03 - 가입 완료</span></li>
+                </ol>
+            </div>
+            
+<form method="post" id="frm" action="/user/signup/2"><input type="hidden" name="auth_data">
+
+    <div class="verify_wp">
+        <div class="verify_to cellphone" name="signup_container">
+            <div class="verify_cp">
+                <div class="do">
+                    <div class="tit_area">
+                        <h4 class="sp_sup tit_terms">약관 동의</h4>
+                    </div>
+                    <div class="terms_area">
+                        <ul class="terms_lst">
+                            <li>
+                                <input type="checkbox" id="chk" name="chk" value="chk1">
+                                <label for="termsAgree">본인확인 이용 동의</label>
+                                <span class="sp_sup btn_p"><button type="button" name="btn_policy" alt="1">전문보기</button></span>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="chk" name="chk" value="chk2">
+                                <label for="termsAgree2" class="even">개인정보 수집/이용/취급위탁 동의</label>
+                                <span class="sp_sup btn_p"><button type="button" name="btn_policy" alt="2">전문보기</button></span>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="chk" name="chk" value="chk3">
+                                <label for="termsAgree3">고유 식별정보처리 동의</label>
+                                <span class="sp_sup btn_p"><button type="button" name="btn_policy" alt="3">전문보기</button></span>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="chk" name="chk" value="chk4">
+                                <label for="termsAgree4" class="even">통신사 본인확인서비스 이용 동의</label>
+                                <span class="sp_sup btn_p"><button type="button" name="btn_policy" alt="4">전문보기</button></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="terms_all_agree">
+                        <input type="checkbox" id="total" name="total">
+                        <label for="termsAllAgree">위의 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.</label>
+                    </p>
+                    <div class="tit_area">
+                        <h4 class="sp_sup tit_private">개인정보 입력</h4>
+                        <p class="must"><em class="ico_circle"></em>표시정보는 필수 입력 사항입니다.</p>
+                    </div>
+                    <table  border="1" class="tbl_join">
+                    <colgroup>
+                    <col width="131px">
+                    <col width="">
+                    </colgroup><tbody>
+                    <tr class="first">
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>이름</p></th>
+                    <td>
+                        <input type="text" id="s_name" name="s_name" maxlength="50" class="txt" style="width:168px">
+                    </td>
+                    </tr>
+                    <tr>
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>성별</p></th>
+                    <td>
+                    <input type="radio" id="gender" name="gender" value="1" class="form_input"><label for="gendermale" class="form_label">남</label>
+                    <input type="radio" id="gender" name="gender" value="2" class="form_input"><label for="genderfemale" class="form_label">여</label>
+                    </td>
+                    </tr>
+                    <tr>
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>생년월일</p></th>
+                    <td>
+                        <select id="birth1" name="birth1" style="width:71px">
+                            <option value="">년도</option>
+                                                            <option value="2014">2014</option>
+                                                            <option value="2013">2013</option>
+                                                            <option value="2012">2012</option>
+                                                            <option value="2011">2011</option>
+                                                            <option value="2010">2010</option>
+                                                            <option value="2009">2009</option>
+                                                            <option value="2008">2008</option>
+                                                            <option value="2007">2007</option>
+                                                            <option value="2006">2006</option>
+                                                            <option value="2005">2005</option>
+                                                            <option value="2004">2004</option>
+                                                            <option value="2003">2003</option>
+                                                            <option value="2002">2002</option>
+                                                            <option value="2001">2001</option>
+                                                            <option value="2000">2000</option>
+                                                            <option value="1999">1999</option>
+                                                            <option value="1998">1998</option>
+                                                            <option value="1997">1997</option>
+                                                            <option value="1996">1996</option>
+                                                            <option value="1995">1995</option>
+                                                            <option value="1994">1994</option>
+                                                            <option value="1993">1993</option>
+                                                            <option value="1992">1992</option>
+                                                            <option value="1991">1991</option>
+                                                            <option value="1990">1990</option>
+                                                            <option value="1989">1989</option>
+                                                            <option value="1988">1988</option>
+                                                            <option value="1987">1987</option>
+                                                            <option value="1986">1986</option>
+                                                            <option value="1985">1985</option>
+                                                            <option value="1984">1984</option>
+                                                            <option value="1983">1983</option>
+                                                            <option value="1982">1982</option>
+                                                            <option value="1981">1981</option>
+                                                            <option value="1980" selected="selected">1980</option>
+                                                            <option value="1979">1979</option>
+                                                            <option value="1978">1978</option>
+                                                            <option value="1977">1977</option>
+                                                            <option value="1976">1976</option>
+                                                            <option value="1975">1975</option>
+                                                            <option value="1974">1974</option>
+                                                            <option value="1973">1973</option>
+                                                            <option value="1972">1972</option>
+                                                            <option value="1971">1971</option>
+                                                            <option value="1970">1970</option>
+                                                            <option value="1969">1969</option>
+                                                            <option value="1968">1968</option>
+                                                            <option value="1967">1967</option>
+                                                            <option value="1966">1966</option>
+                                                            <option value="1965">1965</option>
+                                                            <option value="1964">1964</option>
+                                                            <option value="1963">1963</option>
+                                                            <option value="1962">1962</option>
+                                                            <option value="1961">1961</option>
+                                                            <option value="1960">1960</option>
+                                                            <option value="1959">1959</option>
+                                                            <option value="1958">1958</option>
+                                                            <option value="1957">1957</option>
+                                                            <option value="1956">1956</option>
+                                                            <option value="1955">1955</option>
+                                                            <option value="1954">1954</option>
+                                                            <option value="1953">1953</option>
+                                                            <option value="1952">1952</option>
+                                                            <option value="1951">1951</option>
+                                                            <option value="1950">1950</option>
+                                                            <option value="1949">1949</option>
+                                                            <option value="1948">1948</option>
+                                                            <option value="1947">1947</option>
+                                                            <option value="1946">1946</option>
+                                                            <option value="1945">1945</option>
+                                                            <option value="1944">1944</option>
+                                                            <option value="1943">1943</option>
+                                                            <option value="1942">1942</option>
+                                                            <option value="1941">1941</option>
+                                                            <option value="1940">1940</option>
+                                                            <option value="1939">1939</option>
+                                                            <option value="1938">1938</option>
+                                                            <option value="1937">1937</option>
+                                                            <option value="1936">1936</option>
+                                                            <option value="1935">1935</option>
+                                                            <option value="1934">1934</option>
+                                                            <option value="1933">1933</option>
+                                                            <option value="1932">1932</option>
+                                                            <option value="1931">1931</option>
+                                                            <option value="1930">1930</option>
+                                                            <option value="1929">1929</option>
+                                                            <option value="1928">1928</option>
+                                                            <option value="1927">1927</option>
+                                                            <option value="1926">1926</option>
+                                                            <option value="1925">1925</option>
+                                                            <option value="1924">1924</option>
+                                                            <option value="1923">1923</option>
+                                                            <option value="1922">1922</option>
+                                                            <option value="1921">1921</option>
+                                                            <option value="1920">1920</option>
+                                                            <option value="1919">1919</option>
+                                                            <option value="1918">1918</option>
+                                                            <option value="1917">1917</option>
+                                                            <option value="1916">1916</option>
+                                                            <option value="1915">1915</option>
+                                                            <option value="1914">1914</option>
+                                                            <option value="1913">1913</option>
+                                                            <option value="1912">1912</option>
+                                                            <option value="1911">1911</option>
+                                                            <option value="1910">1910</option>
+                                                            <option value="1909">1909</option>
+                                                            <option value="1908">1908</option>
+                                                            <option value="1907">1907</option>
+                                                            <option value="1906">1906</option>
+                                                            <option value="1905">1905</option>
+                                                            <option value="1904">1904</option>
+                                                            <option value="1903">1903</option>
+                                                            <option value="1902">1902</option>
+                                                            <option value="1901">1901</option>
+                                                            <option value="1900">1900</option>
+                                                        </select>
+                        <select id="birth2" name="birth2" style="width:71px">
+                            <option>월</option>
+                                                            <option value="01">01</option>
+                                                            <option value="02">02</option>
+                                                            <option value="03">03</option>
+                                                            <option value="04">04</option>
+                                                            <option value="05" selected="selected">05</option>
+                                                            <option value="06">06</option>
+                                                            <option value="07">07</option>
+                                                            <option value="08">08</option>
+                                                            <option value="09">09</option>
+                                                            <option value="10">10</option>
+                                                            <option value="11">11</option>
+                                                            <option value="12">12</option>
+                                                    </select>
+                        <select id="birth3" name="birth3" style="width:71px">
+                            <option>일</option>
+                                                            <option value="01">01</option>
+                                                            <option value="02">02</option>
+                                                            <option value="03">03</option>
+                                                            <option value="04">04</option>
+                                                            <option value="05">05</option>
+                                                            <option value="06">06</option>
+                                                            <option value="07">07</option>
+                                                            <option value="08">08</option>
+                                                            <option value="09">09</option>
+                                                            <option value="10">10</option>
+                                                            <option value="11">11</option>
+                                                            <option value="12">12</option>
+                                                            <option value="13">13</option>
+                                                            <option value="14">14</option>
+                                                            <option value="15">15</option>
+                                                            <option value="16">16</option>
+                                                            <option value="17">17</option>
+                                                            <option value="18">18</option>
+                                                            <option value="19">19</option>
+                                                            <option value="20">20</option>
+                                                            <option value="21" selected="selected">21</option>
+                                                            <option value="22">22</option>
+                                                            <option value="23">23</option>
+                                                            <option value="24">24</option>
+                                                            <option value="25">25</option>
+                                                            <option value="26">26</option>
+                                                            <option value="27">27</option>
+                                                            <option value="28">28</option>
+                                                            <option value="29">29</option>
+                                                            <option value="30">30</option>
+                                                            <option value="31">31</option>
+                                                    </select>
+                    </td>
+                    </tr>
+                    <tr>
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>통신사</p></th>
+                    <td>
+                        <input type="radio" id="telecom" name="telecom" value="01" class="form_input"><label for="telecomskt" class="form_label">SKT</label>
+                        <input type="radio" id="telecom" name="telecom" value="02" class="form_input"><label for="telecomkt" class="form_label">KT</label>
+                        <input type="radio" id="telecom" name="telecom" value="03" class="form_input"><label for="telecomlg" class="form_label">LG U+</label>
+                        <input type="radio" id="telecom" name="telecom" value="04" class="form_input"><label for="telecomskmvno" class="form_label">SKT MVNO</label>
+                    </td>
+                    </tr>
+                    <tr>
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>휴대폰 번호</p></th>
+                    <td>
+                        <select id="phoneno1" name="phoneno1" style="width:71px">
+                            <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                        <option value="0505">0505</option>
+                        <option value="0502">0502</option>
+                        </select>
+                        - 
+                        <input id="phoneno2" name="phoneno2" type="text" class="txt" style="width:76px" maxlength="4"> 
+                        - 
+                        <input id="phoneno3" name="phoneno3" type="text" class="txt" style="width:76px" maxlength="4">
+                        <span class="btn_cfm_req"><button type="button" id="btn_auth">인증 번호 요청</button></span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <th scope="row"><p><span class="ico_circle">필수입력 - </span>인증 번호</p></th>
+                    <td>
+                        <input type="hidden" name="c_num" value="">
+                        <input type="hidden" name="seq" value="">
+                        <input type="hidden" name="bkcheck" id="bkcheck" value="0">
+                        <input type="hidden" id="name_token" name="name_token" value="">
+                        <input type="hidden" id="enc_data" name="enc_data" value="">
+                        <input type="text" id="auth_num" maxlength="6" name="auth_num" readonly="readonly" class="txt" style="width:68px">
+                        
+                        <span id="remain_area" class="btn_cfm_input" style="display:none;">
+                            <button type="button" id="btn_verify" disabled="disabled">인증 번호 입력</button>
+                        </span>
+
+                       </td>
+                    </tr>
+                        </tbody></table>
+                        <div class="btns">
+                        <a href="#" id="btn_next" class="sp_sup bt_ok">확인</a>
+                        <a href="#" id="btn_reset" class="sp_sup bt_cancel">취소</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- verify_wp 끝 -->
+
+
+
+</form>
+
+        </div>

@@ -1,0 +1,31 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.model.Form_Data;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class MemberController {
+
+	public Object data(String service, ServiceRepository repository, 
+			Bean bean, HttpServletRequest request, Form_Data fd)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "test_list" :
+				//System.out.println(fd.getList().size());
+				//System.out.println("ddd");
+				res = repository.test_list(bean, fd);
+				break;
+		}
+
+		return res;
+	}
+	
+}

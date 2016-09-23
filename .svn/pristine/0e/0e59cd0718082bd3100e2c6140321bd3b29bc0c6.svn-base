@@ -1,0 +1,71 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.model.Form_Data;
+import com.bubble.shop.service.FileUp;
+import com.bubble.shop.service.ServiceRepository;
+
+
+@Controller()
+public class MemberController {
+
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request, Form_Data fd)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "test_list" :
+				//System.out.println(fd.getList().size());
+				//System.out.println("ddd");
+
+				// 첨부파일
+				if (fd.getList() != null)
+				{
+					for (int i = 0; i < fd.getList().size(); i++)
+					{
+						//System.out.println(fd.getList().get(i).getUpfile().getOriginalFilename());
+						if (!fd.getList().get(i).getUpfile().getOriginalFilename().equals("") && fd.getList().get(i).getUpfile().getOriginalFilename() != null)
+						{
+							bean.setUpfile(fd.getList().get(i).getUpfile());
+							fd.getList().get(i).setRename_upfile(new FileUp().fileUpload(bean, request));
+							System.out.println(i + "번 - 업로드 파일명 : " + fd.getList().get(i).getUpfile().getOriginalFilename());
+							System.out.println(i + "번 - 저장된 파일명 : " + fd.getList().get(i).getRename_upfile());
+						}
+						else
+						{
+							System.out.println("첨부 -- 없다");
+						}
+					}
+				}
+				else
+				{
+					System.out.println("데이터 없음");
+				}
+				//System.out.println(bean.get);
+				
+				
+				//res = repository.test_list(bean, fd);
+				break;
+			case "signup2_ajax" :
+				res = repository.userid_chk(bean);
+				bean.setRedirect(true);
+				bean.setUrl("bs/user/member/" + service);
+				break;
+			case "bbkfind":
+				System.out.println("이름 : " + bean.getBs_name()+"핸드폰번호 : " + bean.getBs_hp());
+				res = repository.userid_find(bean);
+				System.out.println("레파지토리 리턴 후 -----아이디 : "+ bean.getBs_userid()+"이름 : " + bean.getBs_name()+"핸드폰번호 : " + bean.getBs_hp());
+				break;
+				
+			
+		}
+
+		return res;
+	}
+	
+}

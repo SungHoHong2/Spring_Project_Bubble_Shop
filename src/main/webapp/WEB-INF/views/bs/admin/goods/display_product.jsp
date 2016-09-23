@@ -1,0 +1,163 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$.ajax({
+	    type:"GET"
+	    ,async : true
+	          , url : "reg_widget2_data"
+	          , dataType : "html"
+	          , data : "keyword=" + encodeURIComponent($(this).val()) 
+	          , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+	    	  , success : function(response, status, request) {          
+	    		  
+	    		  $('#widget_2_content').append(response);		
+	    	}
+	   });
+	
+	  
+	  	$('#up').click(function(){
+			
+			document.frm.submit();
+	  	});
+		
+		
+		$('#down').click(function(){
+
+			document.frm2.submit();
+		});
+});
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style>
+.hong_template{
+ padding : 20px;
+ width : 800px;
+ margin:0 auto;
+}
+
+.space{
+	height : 40px;
+}
+
+.buttonsclass{
+	text-align : center;
+		
+	
+}
+
+.scrolldiv{
+height:300px;
+overflow:scroll;
+}
+
+</style>
+<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.min.js"></script>    
+
+</head>
+<body>
+	<form name="frm" method="post">
+	<div class="hong_template">
+	
+		<div>
+		<table class="tbl_full">
+			<thead>
+				<tr>
+					<th>
+						진열된 제품 
+					</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+		<div class="scrolldiv">
+		<div id="widget_2_content"> 
+   				<!--the data from db comes in-->
+   		</div>
+		</div>
+		<div class="space">
+		</div>
+		<div class="buttonsclass">
+				  <span class="button large positive" id="up">위로</span>
+				  <span class="button large negative" id="down">아래</span>
+		</div>
+		<div class="space">
+		</div>
+		<div>
+		<table class="tbl_full">
+			<thead>
+				<tr>
+					<th>진열 대기 상품</th>
+				</tr>
+			</thead>
+		</table>
+		<div class="scrolldiv">
+		<table class="tbl_full">
+			<thead>
+			<tr>
+   					<th width="100">
+   						진열 여부
+   					</th>
+   					<th width="100">
+   						제품코드 
+   					</th>
+   					<th>
+   						상품명
+   					</th>
+   					<th>
+   						가격 
+   					</th>
+   					<th>
+   						수량
+   					</th>
+   					<th>
+   						등록일 <input type="hidden" name="beanArray" value="1">
+   					</th>
+   				</tr>
+			</thead>
+			<tbody>
+			<c:forEach items="${bean.data }"  var = "e"> 
+   				<c:choose>
+   				<c:when test="${e.g_show_list =='N'}">
+   				<tr>
+   					<td width = "50px">
+					 <input type="checkbox" name="beanArray" value="${e.g_code }" />
+   					</td>
+   					<td>
+   						${e.g_code }
+   					</td>
+   					<td width="200px">
+  						<span class="hong_click" id='${e.g_code }'>${e.g_name }</span>
+   					</td>
+  					<td>
+  						${e.g_price }
+  					</td>
+  					<td>
+  						${e.g_num }
+  					</td>
+  					<td width="150">
+  					  <fmt:formatDate value="${e.g_reg_day}" pattern="MM-dd HH:mm"/>
+  					</td>
+   				</tr>  
+   				</c:when>
+   			</c:choose>
+   		</c:forEach>
+			</tbody>
+		</table>	
+	</div>		
+	</div>
+	
+	</div>
+	</form>
+</body>
+</html>

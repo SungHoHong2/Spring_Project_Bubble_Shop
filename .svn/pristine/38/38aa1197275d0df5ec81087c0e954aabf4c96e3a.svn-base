@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+	
+			document.frm.notice_pw.focus();
+			return false;
+				
+		});
+		function detail()
+		{
+			document.frm.action = "detail";
+			document.frm.submit();
+		}
+	</script>
+</head>
+<body>
+		<form name="frm" action="pwChkOk" method="post">
+			<input type="hidden" name="notice_id" value="${param.notice_id }" />
+			<input type="hidden" name="notice_md" value="${param.notice_md }" />
+			<table border="1" cellpadding="1" cellspacing="1">
+				<tr>
+					<td>암호</td>
+					<td><input type="password" name="notice_pw"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="submit" value="확인">
+						<input type="reset" value="취소">
+						<a href="#" onclick="detail(); return false;">뒤로</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+</body>
+</html>

@@ -1,0 +1,55 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.ServiceRepository;
+
+
+@Controller
+public class GoodsController {
+
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request,HttpServletResponse response){
+		
+		Object res	= bean;
+		switch(service)
+		{
+		case "main":
+			res=repository.shopHome(bean);
+			break;
+		case "goods":
+			res=repository.getGoodsList(bean);
+			break;
+		case "goodsdetail":
+			res=repository.getGoodsDetail(request, response, bean);
+			break;
+			
+			
+		case "basketOk":
+			if(bean.getBs_id()!=null)
+			{
+				/*bgd_id bgd_cnt bgd_price*/
+				
+				res = repository.basketinsert(bean);
+			
+				//bean.setUrl("/bs/user/shop/goodsdetail?g_code="+bean.getG_code());
+			}
+			else
+			{
+				bean.setRedirect(true);
+				bean.setUrl("redirect:/bs/user/shop/main");
+			}
+			break;
+		}
+		
+		return res;
+	}
+}

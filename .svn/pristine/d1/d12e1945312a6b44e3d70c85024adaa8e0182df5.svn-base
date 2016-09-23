@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="ct" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+	
+			document.frm.notice_title.focus();
+			return false;
+				
+		});
+	
+		function modifyOk()
+		{
+			document.frm.action="modifyOk";
+			
+			document.frm.submit();
+		}
+	</script>
+
+</head>
+<body>
+	<form name="frm" method="post">
+		<input type="hidden" name="notice_id" value="${bean.data.notice_id}">
+		<table border="1" cellpadding="2" cellspacing="1">
+			<tr>
+				<td>글번호</td>
+				<td>${bean.data.notice_id}</td>
+			</tr>
+			<tr>
+				<td>제목</td>
+				<td><input type="text" name="notice_title" value="${bean.data.notice_title }"></td>
+			</tr>
+			<tr>
+				<td>암호</td>
+				<td>
+					<input type="password" name="notice_pw">
+				</td>
+			</tr>
+			<tr>
+				<td>조회수</td>
+				<td>${bean.data.notice_cnt }</td>
+			</tr>
+			<tr>
+				<td>내용</td>
+				<td>
+					<textarea rows="5" cols="30" name="notice_content">${bean.data.notice_content }</textarea>
+				</td>
+			</tr>
+			<%-- 		<tr>
+		
+		
+			<c:if test="${data.upfile!='null' && data.upfile!=null && data.upfile!='' }">			
+				<ct:ext var="ext" fileName="${data.upfile }"/>
+				<c:choose>
+					<c:when test="${ext }">
+						<td>이미지</td>				
+						<td>
+							<img src="views/up/${data.upfile }"/>
+						</td>	
+					</c:when>
+					<c:otherwise>
+						<td>파일</td>
+						<td>
+							<a href="views/notice/fileDown.jsp?sys=${data.upfile }">${data.upfile }</a>
+						</td>
+					</c:otherwise>
+				</c:choose>
+			</c:if>
+		
+		
+		</tr> --%>
+
+			<tr>
+				<td colspan="2">
+					<a href="#" onclick="modifyOk(); return false;">수정</a>
+					<a href="list">목록으로</a></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

@@ -1,0 +1,89 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.model.Form_Data;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller
+@RequestMapping("/bs/{main}/{sub}/{service}")
+public class MainController {
+
+	@Autowired
+	ServiceRepository repository;
+	
+	@Autowired
+	NoticeController notice;
+	
+	@Autowired 
+	AdminController admin;
+	
+	@Autowired
+	GoodsController shop;
+	
+	@Autowired
+	MemberController member;
+
+	
+	@ModelAttribute("bean")
+	public Object data(@PathVariable("main") String main, @PathVariable("sub") String sub,
+			@PathVariable("service") String service, Bean bean, HttpServletRequest request, Form_Data fd)
+	{
+		Object res = null;
+		
+		System.out.println("URL 디버깅 >> main : " + main + "   sub : " + sub + "   service : " + service);
+		bean.setUrl(sub + "/" + service);
+
+		switch(sub)
+		{
+			case "goods" : 
+				res = admin.data(service, repository, bean, request, fd);
+				break;	
+			
+			case "notice" :
+				res = notice.data(sub, service, repository, bean, request);
+				break;
+			
+			case "member" :
+				res = member.data(service, repository, bean, request, fd);
+				break;
+
+			case "shop" :
+				res=shop.data(service, repository, bean, request);
+				break;
+				
+			default :
+				switch(service)
+				{
+					case "search_ajax" :
+						// 통합검색
+						res = repository.search_ajax(bean);
+						bean.setUrl("bs/" + main + "/include/" + service);
+						break;
+				}
+				break;
+		}
+		
+		return res;
+
+	}
+	
+	@RequestMapping()
+	public String list(@PathVariable("main") String main, Bean bean)
+	{
+		if (bean.isRedirect())
+		{
+			return bean.getUrl();
+		}
+		
+		return "bs/" + main + "/template";
+	}
+	
+}

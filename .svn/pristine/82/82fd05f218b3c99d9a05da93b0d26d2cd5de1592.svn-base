@@ -1,0 +1,16 @@
+$(document).ready(function() {
+	 $('ul.dropdownmenu li.menu').hover(
+             function() { 
+                $('ul', this).fadeIn('normal',function(){$(this).stop();});
+                //$('a', this).animate({top:-21},'fast').clearQueue();
+             },
+            function() {
+                $('a', this).animate({top:0},100).clearQueue();
+                $('ul', this).fadeOut(100);
+           });
+	 $('ul.dropdownmenu li.menu .depth1').bind('focus', function () {        
+         $(this).parents('.menu').find('ul').fadeIn(100);
+         $(this).parents('.menu').siblings().find('ul').fadeOut(100);
+  });
+	
+});

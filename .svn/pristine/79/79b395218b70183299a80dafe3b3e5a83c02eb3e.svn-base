@@ -1,0 +1,266 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<style>
+
+.hong_template{
+ padding : 20px;
+ width : 800px;
+ margin:0 auto;
+}
+ 
+.hong_product_detail{
+ 
+}
+ 
+.hong_product_detail table{
+ border-collapse : collapse;
+ width : 100%;
+}
+ 
+.hong_product_detail td{
+ border : 1px solid #BBBBBB;
+ 
+}
+ 
+#test{
+ width: 100px;
+ height : 100px;
+ background : red;
+}
+ 
+</style>    
+ 
+<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.min.js"></script>
+ 
+<script type="text/javascript">
+ 
+ var date;
+ 
+ $(document).ready(function(){
+  var proNum=0;
+  
+  //initialize product date
+  var date_output = document.getElementById('date_output');
+  loadingdate();
+  date_output.innerHTML=date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate(); 
+ 
+  //initialize product id
+  var testid = document.getElementById('testid'); 
+  testid.innerHTML= getids();
+   
+  $('#addproducts').click(function(){
+ 
+   proNum++;
+   
+   $("#cnt").val(proNum);
+   
+   var tester = document.getElementById('hong_table');
+ 
+   //1) create new div in beta div
+   $('#beta').append('<div id="test'+proNum+'" class="tbl_full"></div>');
+   var test_output = document.getElementById('test'+proNum);
+   //2) add new info in new div 
+   test_output.innerHTML=tester.innerHTML;  
+ 
+ 	//1)change the inputs in the newly created divs 
+   $('#test'+proNum+' #input_g_name').attr('name', 'list['+proNum+'].g_name');
+   $('#test'+proNum+' #input_g_num').attr('name', 'list['+proNum+'].g_num');
+   $('#test'+proNum+' #input_g_price').attr('name', 'list['+proNum+'].g_price');
+   $('#test'+proNum+' #input_g_describe').attr('name', 'list['+proNum+'].g_describe');
+   $('#test'+proNum+' #input_g_imghotitem').attr('name', 'list['+proNum+'].g_imghotitem');
+   $('#test'+proNum+' #input_g_imgshotitem').attr('name', 'list['+proNum+'].g_imgshotitem');
+   $('#test'+proNum+' #input_g_imgdetail').attr('name', 'list['+proNum+'].g_imgshotitem');
+   
+   
+   //1) create unique product id    
+   var testid = document.getElementById('testid'); 
+   testid.innerHTML= getids();
+  
+  });
+  
+  
+  function getids()
+  {
+   return "#"+Math.floor((Math.random() * 99999) + 1);
+  }
+  
+  
+  function loadingdate()
+  {
+   date = new Date();
+  }
+  
+  
+  $('#insert').click(function(){
+   
+      var frm = document.frm;
+      
+      frm.submit();
+  });
+  
+	var open = 0;
+
+   //activate while the firstmenu changes 
+  	 document.getElementById("firstmenu").onchange= function(){
+   
+	   //find the value of the selected option 
+   		var e = document.getElementById("firstmenu");
+		alert(e.options[e.selectedIndex].value);
+
+		//open the secondary menu
+		if(open==0)
+		{
+				$.ajax({
+				    type:"GET"
+				    ,async : true
+				          , url : "reg_menu"
+				          , dataType : "html"
+				          , timeout : 3000
+				          , cache : false
+				          , data : "keyword=" + encodeURIComponent($(this).val()) 
+				          , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+				          , error : function(request, status, error) {
+				            alert("code : " + request.status + "\r\n장애가 발생하였습니다.");
+				          }
+				    	   , success : function(response, status, request) {          
+							 
+							$('#secondmenu').append(response);	
+						open++;
+					    }
+				  });
+				   
+		}
+		
+  	 };
+	
+	
+ }); 
+ 
+ 	
+ 
+ function checkmenu()
+ {
+	  alert('');
+ }
+ 
+</script>
+ 
+<div class ="hong_template">
+<form name="frm" method='post'>
+<div id ="hong_table">
+<table class="tbl_full">
+ <thead>
+ <tr>
+  <th>
+     메뉴코드
+  </th>
+  <th>
+   상품명
+  </th>
+  <th>
+   상품 수량 
+  </th>
+  <th>
+   가격
+  </th>
+  <th>
+      등록일
+  </th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+  <td width="100px">
+   <div id="testid"></div> <!-- Dexter's Lab -->
+  </td>
+  <td width="150px">
+   <input type="text" id="input_g_name" name="list[0].g_name" size="14" value="">
+  </td>
+  <td width="100px">
+   <input type="text" id="input_g_num" name="list[0].g_num">
+  </td>
+  <td width="100px">
+   <input type="text" id="input_g_price" name="list[0].g_price">
+  </td>
+  <td width="100px">
+   <span id="date_output"></span>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="5">
+   <div class="hong_product_detail">
+   <table>
+   <tr>
+   	<td>
+   	  메뉴
+   	</td>
+   	<td>
+   		<select id="firstmenu">
+   			<c:forEach items="${bean.data }" var="e">
+   			<option id="first" value="${e.bm_id }">${e.bm_name } </option>
+   			</c:forEach>
+   		</select>
+   		<div id="secondmenu">
+   		</div>
+   		<div id="thirdmenu">
+   		</div>
+
+   	</td>
+   </tr>
+    <tr>
+     <td bgcolor="#efefef" width="135px">
+      요약 설명 
+     </td>
+     <td>
+      <textarea cols="70" rows="4" id="input_g_describe" name="list[0].g_describe"> </textarea>
+     </td>
+    </tr>
+    <tr>
+     <td bgcolor="#efefef">
+      아이템 이미지
+     </td>
+     <td>
+      <input type="file" id="input_g_imghotitem" name="list[0].g_imghotitem">
+     </td>
+    </tr> 
+    <tr>
+     <td bgcolor="#efefef">
+      아이템 썸네일 이미지
+     </td>
+     <td>
+      <input type="file" id="input_g_imgshotitem" name="list[0].g_imgshotitem">
+     </td>
+    </tr>
+    <tr>
+     <td bgcolor="#efefef">
+      상세 이미지
+     </td>
+     <td>
+      <input type="file" id="input_g_imgdetail" name="list[0].g_imgdetail">
+     </td>
+    </tr>
+      
+   </table>
+     </div>
+   
+  </td>
+ </tr>
+ 
+ </tbody> 
+</table>
+</div>
+<div id="beta"></div>   
+</form>
+</div>
+ 
+<table class="tbl_full">
+ <tbody>
+ <tr>
+  <td colspan="5">
+   <span class="button large positive" id="insert">insert</span>
+   <span class="button large neutral" id="addproducts">add products</span>
+  </td>
+ </tr>
+ </tbody>
+</table>

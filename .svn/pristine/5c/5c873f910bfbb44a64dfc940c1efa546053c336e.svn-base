@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ 
+<div class="hong_title">
+환불 신청
+</div>
+ 
+<div class="hong_template">
+ <table class="tbl_full">
+<thead>
+ <tr>
+ 	<th>
+ 		BR_ID
+ 	</th>
+ 	<th>
+ 		BR_REG_DATE
+ 	</th>
+ 	<th>
+ 		BR_CNT
+ 	</th>
+ 	<th>
+ 		G_CODE
+ 	</th>
+ 	<th>
+ 	    BS_ID
+ 	</th>
+ 	<th>
+ 	    환불
+ 	</th>
+ </tr>
+
+</thead>
+<tbody>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td width="100"><span class="button large negative">환불 완료</span></td>
+	</tr>
+</tbody>
+ </table>
+</div>

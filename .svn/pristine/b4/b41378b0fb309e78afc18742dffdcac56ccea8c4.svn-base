@@ -1,0 +1,138 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set value="${bean.data }" var ="e"/>
+
+	<table class="tbl_full" id="hong_detail_table">
+	<thead>
+		<tr>
+			<th>
+				고유 ID
+			</th>
+			<th>
+				사용자 ID 
+			</th>
+			<th>
+				전화번호
+			</th>
+			<th colspan="2">
+			<div id="wrap_buttons">			 
+			<div class = "hong_exit">
+        		<span class="button large neutral">접기</span>
+       		</div> 
+       		<div class="hong_delete">
+        		<span class="button large negative">삭제</span>
+       		</div>
+       		<div class="hong_fix">
+        		<span class="button large positive">수정</span>
+       		</div>
+       		</div>	
+       		</th>
+		</tr>
+	</thead>
+	<tbody>	
+		<tr>
+			<td>
+				${e.bs_id }
+			</td>
+			<td>
+				${e.bs_userid }
+			</td>
+			<td>
+				${e.bs_hp }
+			</td>
+			<td>
+				${e.bs_reg_date }
+			</td>
+			<!-- extra menu  -->
+			
+			<td rowspan="9" width="200px">
+			<div id="wraplargebutton">	
+				<span class="button xLarge positive" id="bs_participant" name="${e.bs_id }">BS_Participant</span>
+				<span class="button xLarge neutral" id="bs_basket">BS_Basket</span>
+				<span class="button xLarge positive" id="bs_purchase">BS_Purchase</span>
+				<span class="button xLarge neutral" id="bs_refund">BS_Refund</span>
+				<span class="button xLarge positive" id="bs_mycoupon">BS_MyCoupon</span>
+				<span class="button xLarge neutral" id="bs_user_comments">BS_User_Comments</span>
+				<span class="button xLarge positive" id="bs_board_comments">BS_Board_Comments</span>
+				<span class="button xLarge neutral" id="bs_shop_notice">BS_Shop_notice</span>
+				<span class="button xLarge positive" id="bs_address">BS_Address</span>
+				<span class="button xLarge neutral" id="bs_boardlist">BS_Boardlist</span>
+			</div>
+			
+			</td>
+			
+			<!-- extra menu end -->
+			
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+			주소
+		</td>
+		<td colspan="2">
+			${e.bs_address }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+			상세 주소 
+		</td>
+		<td colspan="2">
+			${e.bs_address2 }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		 	이름  
+		</td>
+		<td colspan="2">
+			${e.bs_name }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		 	비밀번호  
+		</td>
+		<td colspan="2">
+			${e.bs_pwd }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		 	가입날짜   
+		</td>
+		<td colspan="2">
+		<fmt:formatDate value="${e.bs_reg_date }" pattern="MM-dd HH:mm"/>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		  이메일   
+		</td>
+		<td colspan="2">
+			${e.bs_email }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		 	메일 수신 여부    
+		</td>
+		<td colspan="2">
+			${e.bs_email_yn }
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2" bgcolor ="#efefef">
+		 	SNS 수신 여부   
+		</td>
+		<td colspan="2">
+			${e.bs_sms_yn }
+		</td>
+		</tr>
+		
+	</tbody>
+	</table>
+
+

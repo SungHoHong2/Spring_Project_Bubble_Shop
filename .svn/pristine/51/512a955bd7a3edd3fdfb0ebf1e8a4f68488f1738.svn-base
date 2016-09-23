@@ -1,0 +1,188 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+ <script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		var frm = document.frm;
+		
+		
+		/* if(form_chk(frm, out_obj)) */
+		
+		if ('${bean.msg}' != "")
+		{
+			if ('${bean.msg}' == "Y")
+			{
+				$("#js_result_id").html('${bean.bs_userid}');
+				$("#js_result_suc").show();
+			}
+			else
+			{
+				alert("일치하는 회원정보가 없습니다!")
+			}
+		}
+		
+		phone_chk = function()
+    	{
+    		var regexp = /^[0-9]{3,20}$/i;
+
+			if(!regexp.test($("#hp2").val()))
+			{    
+				alert("휴대폰 중간자리는 숫자만 입력 가능 합니다!");
+				$("#hp2").focus();
+				return false;
+			}
+			
+			if(!regexp.test($("#hp3").val()))
+			{    
+				alert("휴대폰 끝자리는 숫자만 입력 가능 합니다!");
+				$("#hp3").focus();
+				return false;
+			}
+			
+			return true;
+    	}
+		
+		
+		find_id_hp = function()
+		{ 
+			if (form_chk(frm, "txt_mail"))
+			{
+				if (!phone_chk())
+    			{
+    				return false;
+    			}
+				
+				frm.bs_hp.value = frm.hp1.value +"-" + frm.hp2.value +"-"+frm.hp3.value;
+				frm.action = "find_id_hp";
+				frm.submit();
+			}
+		}
+		
+		
+		find_id = function()
+		{ 
+
+			
+			if (form_chk(frm, "txt_mail"))
+			{
+				if (!phone_chk())
+    			{
+    				return false;
+    			}
+				
+				if($('#hp1').val()!='' && $('#hp2').val()!='' && $('#hp3').val() != '' )
+				{
+					frm.bs_hp.value = frm.hp1.value +"-" + frm.hp2.value +"-"+frm.hp3.value;
+					alert("핸드폰으로 찾기");
+					frm.action = "find_id_hp";
+					frm.submit();
+				}
+				if($('#txt_mail').val() != '')
+				{
+					alert('이메일로찾기');
+					frm.action="userpw_fined_email";
+					frm.submit();
+				}
+				
+			}
+			
+			
+		
+		};
+			$(".opt .rdo").click(function(){
+				alert('!');
+				if($('.rdo:checked').val() == 'byhp')
+				{
+					
+					$("#js_infofind_email").hide();
+					$("#js_infofind_hp").show();
+					
+					
+				}
+				else
+				{
+					$("#js_infofind_hp").hide();
+					$("#js_infofind_email").show();
+				}
+				
+			});
+		
+	});
+
+</script>
+    
+    
+    
+ <form name="frm" method="post" action="#">
+ 	<input type="hidden" name="bs_hp" >
+ 
+ 
+	<div class="wrap_idpw">
+	            <ul class="tab_idpw">
+	                <li class="tab_id"><span class="on">아이디 찾기</span></li>
+	                <li class="tab_pw"><a href="/shop/bs/user/member/findpw">비밀번호 찾기</a></li>
+	            </ul>
+	            <div class="ct_id" id="js_input">
+	    <h3 class="hidden">아이디 찾기</h3>
+	    <div class="join_info">
+	        <h4>가입정보로 찾기</h4>
+	        <p class="desc">가입 당시 입력한 정보를 통해 아이디를 찾을 수 있습니다.<br><strong>휴대폰 또는 이메일</strong> 정보 중 한가지를 선택해주세요.</p>
+	        <div class="inputs">
+	            <div class="opt">
+	                <input type="radio" id="rdo_1" name="find_info" class="rdo" value="byhp" attr-opt="info" checked="checked"><label for="rdo_1"><span class="rd_phone">휴대폰</span></label>
+	                <input type="radio" id="rdo_2" name="find_info" class="rdo" value="byemail" attr-opt="info"><label for="rdo_2"><span class="rd_email">이메일</span></label>
+	            </div>
+	            <div class="input_area">
+	                <label for="txt_name"><span class="input_name">이름</span></label>
+	                <!-- [D] input의 text입력 창 활성 시에 클래스명 focus 추가적용-->
+	                <input type="text" id="bs_name" name="bs_name" maxlength="20" title="이름" class="inp_tx" style="width:214px">
+	            </div>
+	            <div class="input_area">
+	                <div id="js_infofind_hp">
+	                    <label for="hp1"><span class="input_phone">휴대폰</span></label>
+	                    <select id="hp1" title="휴대폰번호" name="hp1" style="width:72px">
+	                        <option value="010">010</option>
+		                    <option value="011">011</option>
+		                    <option value="016">016</option>
+		                    <option value="017">017</option>
+		                    <option value="018">018</option>
+		                    <option value="019">019</option>
+		                    <option value="0505">0505</option>
+		                    <option value="0502">0502</option>
+	                    </select>
+	                    - <input type="text" id="hp2" name="hp2" maxlength="4" title="휴대폰 중간자리" class="inp_tx" style="width:52px">
+	                    - <input type="text" id="hp3" name="hp3" maxlength="4" title="휴대폰 끝자리" class="inp_tx" style="width:52px">
+	                </div>
+	                <div id="js_infofind_email" style="display: none;">
+	                    <label for="txt_mail"><span class="input_email">이메일</span></label><input type="text" id="txt_mail" title="이메일주소" class="inp_tx" style="width:214px">
+	                </div>
+	            </div>
+	        </div>
+	        <div class="btns">
+	            <a href="#" onclick="find_id(); return false;" class="btn_find">찾기</a>
+	        </div>
+	    </div>
+	    	<div id="js_result_suc" class="idpw_result" style="display:none;">
+	    <h3 class="hidden">아이디 찾기</h3>
+	    <p class="id_result"><span class="txt">고객님의 아이디는</span><em id="js_result_id"></em><span class="txt2">입니다.</span></p>
+	    <a class="btn_login" href="/shop/bs/user/member/login">로그인</a>
+	    <p class="txt_result">비밀번호가 기억나지 않는 경우에는<a href="/user/findpasswd" class="btn_pw_sch">비밀번호 찾기<span class="bu"></span></a></p>
+	</div>
+	<div id="js_result_fail" class="idpw_result" style="display:none;">
+	    <h3 class="hidden">아이디 찾기</h3>
+	    <span class="icon_info"></span>
+	    <p class="tit_result">입력하신 정보와 일치하는 회원이 없습니다.</p>
+	    <a href="#" onclick="" class="btn_id_research">아이디 다시 찾기</a>
+	    <p class="txt_result">올바르게 입력되어 있는 경우에도 조회되는 아이디가 없다면<a href="/user/signup">회원 가입하기<span class="bu"></span></a></p>
+	</div>
+	    
+	    
+	    <ul class="txt_lst">
+	        <li>본인 인증 시 제공되는 정보는 인증 이외의 용도로 이용 또는 저장하지 않습니다.</li>
+	    </ul>
+	</div>
+	
+	      </div>
+ </form>       

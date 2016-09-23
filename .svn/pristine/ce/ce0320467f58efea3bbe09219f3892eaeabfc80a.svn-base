@@ -1,0 +1,45 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class AdminController {
+
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "reg_output" :
+				System.out.println("Access AdminController");	
+				String buffer = request.getParameter("product_number");
+				System.out.println("ParamTest : "+buffer);
+				
+				bean.setTitle(buffer); //inserting the information into the bean
+				
+				repository.inputAdminTest(bean);
+				
+				break;
+				
+				
+			case "reg_list" : 
+				System.out.println("Access AdminController");
+				
+			break;
+		}
+
+		return res;
+	}
+	
+	
+	
+	
+	
+	
+}

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper">
+
+	
+	<!-- 병길  start -->
+		<!--병길 게시판  -->
+		<select id="noticelist" resultType="bean" parameterType="bean">
+			<![CDATA[
+				select * from ( select rownum rnum, notice_id, notice_gid, bbl_id, notice_seq, notice_rev, notice_reg_date, bs_name, notice_pw, notice_title, notice_content, notice_cnt, notice_upfile, notice_yn
+	  				from (select * from shop_notice a inner join bs_members b on a.bs_id = b.bs_id 
+	  					where  b.bs_rate <> 0 and bbl_id = #{bbl_id} and (notice_title like '%'||#{search}||'%' or notice_content like '%'||#{search}||'%')
+	  				 	order by notice_yn desc, notice_gid desc, notice_seq)) where rnum >= #{start} and rnum <= #{end}
+			]]>
+		</select>
+	
+		<select id="total" resultType="java.lang.Integer" parameterType="bean">
+			<![CDATA[
+				select count(*) from shop_notice where bbl_id = #{bbl_id} and (notice_title like '%'||#{search}||'%' or notice_content like '%'||#{search}||'%')
+			]]>
+		</select>
+		
+	
+		<update id="notice_cnt" parameterType="java.lang.Integer">
+			update shop_notice set notice_cnt=notice_cnt+1 where notice_id=#{notice_id}
+		</update>
+	
+	
+		<select id="noticedetail" resultType="bean" parameterType="bean">
+			<!-- SELECT * FROM SHOP_NOTICE WHERE NOTICE_ID = #{notice_id} -->
+			SELECT * 
+			FROM SHOP_NOTICE a inner join bs_members b on a.bs_id = b.bs_id 
+			WHERE NOTICE_ID = #{notice_id}
+		</select>
+	
+	
+		<sql id="notice_id_Max">
+			(select case
+			when max(notice_id) is null then 1
+			when max(notice_id) is not null then max(notice_id)+1
+			end as notice_id from shop_notice
+			)
+		</sql>
+	
+		<select id="notice_id_max_select" resultType="bean">
+			SELECT MAX(NOTICE_ID) AS NOTICE_ID FROM SHOP_NOTICE
+		</select>
+		
+		<insert id="noticewrite" parameterType="bean" >
+		
+			insert into shop_notice (notice_id, notice_gid, bbl_id, notice_seq, notice_rev,notice_cnt, notice_reg_date,notice_mod_date, notice_title, bs_id, notice_pw,  notice_content, notice_upfile, notice_yn, notice_user_upfile)
+			values(<include refid="notice_id_Max"/>,<include refid="notice_id_Max"/>,#{bbl_id},0,0,-1,sysdate,sysdate,#{notice_title}, #{bs_id}, #{notice_pw},  #{notice_content}, #{notice_upfile},#{notice_yn}, #{notice_user_upfile})
+			<selectKey keyProperty="notice_id" resultType="java.lang.Integer" order="AFTER">
+			  select max(notice_id) as notice_id from shop_notice
+			</selectKey>
+		</insert>
+	
+		<select id="noticepwchk" resultType="bean" parameterType="bean">
+			SELECT * FROM SHOP_NOTICE WHERE NOTICE_ID = #{notice_id} AND NOTICE_PW = #{notice_pw}
+		</select>
+	
+		<delete id="noticedelete">
+			DELETE FROM SHOP_NOTICE WHERE NOTICE_ID=#{notice_id}
+		</delete>
+	
+		<update id="noticemodifyok" parameterType="bean">
+			UPDATE SHOP_NOTICE SET NOTICE_TITLE=#{notice_title}, NOTICE_PW=#{notice_pw}, NOTICE_CONTENT=#{notice_content}
+			WHERE NOTICE_ID = #{notice_id}
+		</update>
+	
+		<update id="noticemodifyok_file" parameterType="bean">
+			UPDATE SHOP_NOTICE SET NOTICE_TITLE=#{notice_title}, NOTICE_PW=#{notice_pw}, NOTICE_CONTENT=#{notice_content}, NOTICE_USER_UPFILE=#{notice_user_upfile}, NOTICE_UPFILE=#{notice_upfile}
+			WHERE NOTICE_ID = #{notice_id}
+		</update>
+		
+		<update id="noticereply_up" parameterType="bean">
+			<![CDATA[
+				UPDATE SHOP_NOTICE SET NOTICE_SEQ = NOTICE_SEQ + 1 WHERE NOTICE_GID = #{notice_gid} AND NOTICE_SEQ > #{notice_seq}
+			]]>
+		</update>
+		
+		<insert id="noticereply_write" parameterType="bean">
+			INSERT INTO SHOP_NOTICE (NOTICE_ID, BBL_ID, BS_ID, NOTICE_PW, NOTICE_GID, NOTICE_SEQ, NOTICE_REV, NOTICE_YN, NOTICE_TITLE, NOTICE_CONTENT, NOTICE_CNT, NOTICE_REG_DATE, NOTICE_MOD_DATE, NOTICE_UPFILE, NOTICE_USER_UPFILE)
+			VALUES (<include refid="notice_id_Max"/>,#{bbl_id}, #{bs_id},#{notice_pw}, #{notice_gid}, #{notice_seq}+1, #{notice_rev}+1, 'N', #{notice_title},#{notice_content},-1,sysdate, sysdate, #{notice_upfile}, #{notice_user_upfile})
+		</insert>
+		
+		
+		<update id="upfile_delete" parameterType="bean" >
+			UPDATE SHOP_NOTICE SET NOTICE_UPFILE=NULL,NOTICE_USER_UPFILE=NULL WHERE NOTICE_ID = #{notice_id}
+		</update>
+		
+		<!-- 병길 게시판 -->
+
+		<!-- 병길 멤버 -->
+		<select id="userid_find_hp" resultType="java.lang.String" parameterType="bean" >
+			SELECT bs_userid FROM BS_MEMBERS WHERE BS_NAME=#{bs_name} AND BS_HP=#{bs_hp}
+		</select>
+		
+		<select id="userpw_find_hp" resultType="java.lang.String" parameterType="bean">
+			SELECT bs_pwd FROM BS_MEMBERS WHERE BS_NAME=#{bs_name} AND BS_HP=#{bs_hp} AND BS_USERID=#{bs_userid}
+		</select>
+		
+		<update id="userpw_temp" parameterType="bean">
+			UPDATE BS_MEMBERS SET BS_PWD = #{bs_pwd} WHERE BS_USERID=#{bs_userid}
+		</update>
+		
+		<select id="getuserpw" resultType="java.lang.String" parameterType="bean">
+			SELECT BS_PWD FROM BS_MEMBERS WHERE BS_USERID = #{bs_userid}
+		</select>
+		
+		<!-- 병길 멤버끝 -->
+	
+	<!-- 병길  end -->
+	
+
+	<select id="hw_ajax2" resultType="bean" parameterType="bean">
+		<![CDATA[
+		select keyword from(
+			select keyword from search_text
+			where case when keyword < 'ㄱ' then substr(keyword, 1, 1) 
+			            when ascii('ㄱ') <= ascii(keyword) and 
+			                 ascii(keyword)<= ascii('ㅎ') then keyword 
+			            when keyword < '나' then 'ㄱ'
+			            when keyword < '다' then 'ㄴ'
+			            when keyword < '라' then 'ㄷ'
+			            when keyword < '마' then 'ㄹ'
+			            when keyword < '바' then 'ㅁ'
+			            when keyword < '사' then 'ㅂ'
+			            when keyword < '아' then 'ㅅ'
+			            when keyword < '자' then 'ㅇ'
+			            when keyword < '차' then 'ㅈ'
+			            when keyword < '카' then 'ㅊ'
+			            when keyword < '타' then 'ㅋ'
+			            when keyword < '파' then 'ㅌ'
+			            when keyword < '하' then 'ㅍ'
+			            else                     'ㅎ'
+			       end = #{keyword}  or keyword like #{keyword}||'%'
+			) aa
+			where rownum < 11
+			order by lengthb(keyword) asc
+		]]>
+	</select>
+	
+	
+	
+
+	<!-- AdminTestMapper 입니다. [홍성호] -->
+	<select id="inputadmintest" parameterType="bean">
+		insert into notice (title) values 
+ 		(#{title})
+	</select>	
+	
+	<select id="reglist" resultType="bean">		
+		<![CDATA[
+  		select * from
+  		(select rownum rnum, g_code, g_name, g_imghotitem, g_reg_day, bm_id,
+  		g_imgdetail, g_price, g_pricedis, g_num, g_imglist, g_end_day, g_start_day, 
+  		g_show_hot,  g_show_list from
+  		(select * from goods order by g_code))
+  		where rnum >= #{start} and rnum < = #{end }  
+ 		]]>	</select>	
+	
+	<select id="regdetail" resultType="bean" parameterType="bean">
+		select * from goods where g_code = #{g_code }
+	</select>
+	
+	<select id="gettotal" resultType="java.lang.Integer">
+		select count(*) from goods
+	</select>
+	
+	<select id="getshowtotal" resultType="java.lang.Integer">
+		select count(*) from goods where g_show_hot = 'y'
+	</select>
+	
+	<select id="reg_insert" parameterType="bean">
+		 insert into goods(g_code, g_name, g_describe, g_imghotitem, g_imgshotitem, 
+		 g_reg_day, g_imgdetail, g_price, g_num, bm_id) values
+ 		(#{g_code}, #{g_name }, #{g_describe }, #{g_imghotitem}, #{g_imgshotitem},
+ 		sysdate, #{g_imgdetail }, #{g_price }, #{g_num }, #{bm_id})
+	</select>
+	
+	<select id="reg_findmenu" resultType="bean">
+		select * from bs_menu where bm_par_id = 0
+	</select>
+	
+	<select id="reg_findmenu2" resultType="bean" parameterType="bean">
+		select * from bs_menu where bm_par_id = #{bm_id}
+	</select>
+	
+	 <sql id="maxid">
+ 		(select max(bm_id)+1 from bs_menu)
+ 	</sql>
+	
+	<select id="reg_insertmenu" parameterType="bean">
+		insert into bs_menu (bm_id, bm_par_id) values (<include refid="maxid"/>, #{bm_par_id})
+	</select>
+	
+	<select id="reg_updateshow" parameterType="java.lang.Integer">
+		update goods set g_show_list='y' where g_code= #{input }
+	</select>
+	
+	<select id="reg_updateshowdown" parameterType="java.lang.Integer">
+		update goods set g_show_list='n' where g_code= #{input }
+	</select>
+	
+	<select id="reg_members" resultType="bean" parameterType="bean">
+		  <![CDATA[ 
+		select * from     
+    	(select rownum rnum, bs_rate, bs_userid, bs_id, bs_hp, bs_name, bs_pwd, bs_reg_date, bs_email, bs_email_yn from
+    	(select * from bs_members order by bs_id))
+    	where rnum >= #{start} and rnum < = #{end }   
+		  ]]> 
+  			 
+  </select> 
+
+	
+	<select id="getmemberdetail" resultType="bean" parameterType="bean">
+		select * from bs_members where bs_id = #{bs_id }
+	</select>
+	
+	<!-- AdminTestMapper 끝입니다. -->
+	
+	
+	<!-- [민경훈]내꺼 지우지마 ㅠ_ㅠ -->
+	<select id="getVisualImg" resultType="bean" parameterType="bean">
+		<![CDATA[
+		SELECT G_IMGHOTITEM, G_IMGSHOTITEM, G_CODE  FROM GOODS WHERE g_sell='Y' AND G_SHOW_LIST='Y' AND G_SHOW_HOT='Y'
+		]]>
+	</select>
+	
+	<select id="getBestItem" resultType="bean" parameterType="bean">
+		<![CDATA[
+		SELECT * FROM (SELECT A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS, G_NUM, G_SELL,
+		G_SHOW_LIST,G_IMGLIST,  NVL(SUM(B.BP_CNT), 0) AS BP_CNT FROM GOODS A
+		LEFT OUTER JOIN BS_PURCHASE B
+		ON A.G_CODE = B.G_CODE
+		GROUP BY BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,
+		G_NUM, G_SELL, G_SHOW_LIST, G_IMGLIST
+		ORDER BY BP_CNT DESC)
+		WHERE ROWNUM<=30
+		]]>
+	</select>
+	
+	<select id="getMenu" resultType="bean" parameterType="bean">
+		<![CDATA[
+			SELECT BM_ID, BM_INDEX, BM_PAR_ID, BM_NAME 
+			FROM BS_MENU 
+			WHERE BM_SHOW_YN = 'Y' 
+			ORDER BY BM_PAR_ID, BM_INDEX
+		]]>
+	</select>
+	<select id="getGoodsItem1" resultType="bean" parameterType="bean">
+		SELECT * FROM (SELECT A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,  G_NUM, G_SELL,
+			G_SHOW_LIST,G_IMGLIST,  NVL(SUM(B.BP_CNT), 0) AS BP_CNT FROM GOODS A
+			LEFT OUTER JOIN BS_PURCHASE B
+			ON A.G_CODE = B.G_CODE
+			GROUP BY A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,
+			G_NUM, G_SELL, G_SHOW_LIST, G_IMGLIST) C
+	    	WHERE C.G_CODE IN (SELECT G_CODE FROM BS_GOODS_GROUP WHERE BM_ID IN (SELECT BM_ID FROM BS_MENU WHERE BM_PAR_ID = #{bm_id}))
+  		UNION ALL
+		SELECT * FROM (SELECT A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,  G_NUM, G_SELL,
+			G_SHOW_LIST,G_IMGLIST,  NVL(SUM(B.BP_CNT), 0) AS BP_CNT FROM GOODS A
+			LEFT OUTER JOIN BS_PURCHASE B
+			ON A.G_CODE = B.G_CODE
+			GROUP BY A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,
+			G_NUM, G_SELL, G_SHOW_LIST, G_IMGLIST) C
+	    	WHERE C.G_CODE IN (SELECT G_CODE FROM BS_GOODS_GROUP WHERE BM_ID IN (SELECT BM_ID FROM BS_MENU WHERE BM_PAR_ID IN (SELECT BM_ID FROM BS_MENU WHERE BM_PAR_ID =#{bm_id})
+	    	))
+	</select>
+	
+	
+	<select id="getGoodsItem2" resultType="bean" parameterType="bean">
+		SELECT * FROM (SELECT A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,  G_NUM, G_SELL,
+			G_SHOW_LIST,G_IMGLIST,  NVL(SUM(B.BP_CNT), 0) AS BP_CNT FROM GOODS A
+			LEFT OUTER JOIN BS_PURCHASE B
+			ON A.G_CODE = B.G_CODE
+			GROUP BY A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,
+			G_NUM, G_SELL, G_SHOW_LIST, G_IMGLIST) C
+	    	WHERE C.G_CODE IN (SELECT G_CODE FROM BS_GOODS_GROUP WHERE BM_ID = #{bm_id})
+	    UNION ALL
+	    SELECT * FROM (SELECT A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,  G_NUM, G_SELL,
+			G_SHOW_LIST,G_IMGLIST,  NVL(SUM(B.BP_CNT), 0) AS BP_CNT FROM GOODS A
+			LEFT OUTER JOIN BS_PURCHASE B
+			ON A.G_CODE = B.G_CODE
+			GROUP BY A.BM_ID, A.G_CODE, G_NAME, G_DESCRIBE, G_PRICE, G_PRICEDIS,
+			G_NUM, G_SELL, G_SHOW_LIST, G_IMGLIST) C
+	    	WHERE C.G_CODE IN (SELECT G_CODE FROM BS_GOODS_GROUP WHERE BM_ID IN (SELECT BM_ID FROM BS_MENU WHERE BM_PAR_ID = #{bm_id})
+	    	)
+	</select>
+	
+	<select id="getGoodsInfo" resultType="bean" parameterType="bean">
+		
+	</select>
+	<!-- [민경훈] 영역표시 끝-->
+
+	
+	<select id="userid_chk" resultType="bean" parameterType="bean">
+		<![CDATA[
+			SELECT BS_USERID FROM BS_MEMBERS
+			WHERE BS_USERID = #{bs_userid} and rownum = 1
+		]]>
+	</select>
+
+	<select id="bs_login" resultType="bean" parameterType="bean">
+		<![CDATA[ 
+			SELECT BS_ID, BS_USERID, BS_NAME, BS_RATE FROM BS_MEMBERS
+			WHERE BS_USERID = #{bs_userid} AND BS_PWD = #{bs_pwd}
+		]]>
+	</select>
+</mapper>

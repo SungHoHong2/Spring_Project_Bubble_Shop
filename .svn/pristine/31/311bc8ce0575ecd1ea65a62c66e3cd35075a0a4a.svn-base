@@ -1,0 +1,101 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<table class="tbl_full" id="hong_detail_table">
+	<thead>
+		<tr>
+			<th colspan="2">
+				<div class = "hong_exit">
+   					<span class="button large neutral">접기</span>
+   				</div>	
+   				<div class="hong_delete">
+   					<span class="button large negative">삭제</span>
+   				</div>
+   				<div class="hong_fix">
+   					<span class="button large positive">수정</span>
+   				</div>
+   				
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td width="200px">
+		 상세 내용 
+		</td>
+		<td>
+		    ${bean.data.content }
+		</td>
+	</tr>
+	<tr>
+		<td>
+			pcs
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			price // retail price 
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			판매 상태
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			게시 상태
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			게시시작일 ~  게시종료일 
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			리스트 이미지
+		</td>
+		<td>
+			<img src="../../../resources/admintest/d1.png" width="450" height="350">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			상세 이미지
+		</td>
+		<td>
+			<img src="../../../resources/admintest/d2.png" width="450" height="350">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			핫아이템<br>
+			썸네일 
+		</td>
+		<td>
+			<img src="../../../resources/admintest/d3.png" width="450" height="350">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			핫아이템<br>
+			이미지
+		</td>
+		<td>
+			<img src="../../../resources/admintest/s1.png" width="450" height="350">
+		</td>
+	</tr>
+	
+	</tbody>
+</table>

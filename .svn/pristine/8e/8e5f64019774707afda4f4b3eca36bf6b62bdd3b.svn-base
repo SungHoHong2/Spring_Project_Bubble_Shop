@@ -1,0 +1,199 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	   $.ajax({
+           type:"GET"
+           ,async : true
+              , url : "availableMembers"
+              , dataType : "html"
+              , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+          	  , success : function(response, status, request) {  					
+				var totalmem = document.getElementById('totalMem');
+				totalmem.innerHTML="전체 회원 수 : "+response;
+          	  }
+	   });
+	
+		$('#money').change(function(){						
+		var text = document.getElementById('textInput');
+		text.value= this.value;
+		});
+	
+		
+		$('#input_coupon').click(function(){
+			document.frm.submit();
+		});
+		
+		
+		$('#select_random').click(function(){
+			var random = document.getElementById('gorandom');		
+		     $.ajax({
+		           type:"GET"
+		           ,async : true
+		           , url : "gorandom"
+		           , dataType : "html"
+		           , data : "randomnum=" + encodeURIComponent(random.value) 
+		           , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+		           , success : function(response, status, request) {  
+		        	   
+		        	   $('#takingoutindividuals').html('');
+			 			$('#takingoutindividuals').append(response);
+						var vheight = $('#individual_table').height();
+						$('#takingoutindividuals').animate({height: vheight},500);
+			 			
+						var text2 = document.getElementById('textInput');
+						
+						var starter = document.getElementById('starter');
+						var finisher = document.getElementById('finisher');
+						
+						$('.bc_price').attr('value', text2.value);
+						$('.bc_start_date_before').attr('value',starter.value);
+						$('.bc_end_date_before').attr('value',finisher.value);
+		   			
+		           }
+		     });
+		
+		});
+		
+		$('#select_individuals').click(function(){
+			
+		     $.ajax({
+		           type:"GET"
+		           ,async : true
+		              , url : "individuals"
+		              , dataType : "html"
+		             // , data : "memberid=" + encodeURIComponent($(this).attr('id')) 
+		              , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+		          	  , success : function(response, status, request) {      
+									
+				 		$('#takingoutindividuals').html('');
+			 			$('#takingoutindividuals').append(response);
+						var vheight = $('#individual_table').height();
+						$('#takingoutindividuals').animate({height: vheight},500);
+			 			
+						var text2 = document.getElementById('textInput');
+						
+						var starter = document.getElementById('starter');
+						var finisher = document.getElementById('finisher');
+						
+						$('.bc_price').attr('value', text2.value);
+						$('.bc_start_date_before').attr('value',starter.value);
+						$('.bc_end_date_before').attr('value',finisher.value);
+								     
+		           }
+		     });
+		});
+		
+	
+		
+});
+
+
+
+
+</script>
+
+<style>
+.hong_template{
+ padding : 20px;
+ width : 800px;
+ margin:0 auto;
+}
+
+.hong_title{
+ padding-top : 40px;
+ width : 800px;
+ margin:0 auto;
+ color : blue;
+ font-size : 20px; 
+}
+
+
+.input_title{
+ padding : 20px;
+ width : 200px;
+ margin:0 auto;
+}
+
+
+#takingoutindividuals{
+	height : 0px;
+}
+
+#totalMem{
+ 	width : 50px;
+ 	 color : blue;
+ font-size : 15px; 
+}
+</style>
+
+
+<div class="hong_title">
+쿠폰 생성 
+</div>
+
+<form name="frm" method="POST" action ="distributing_coupons">
+<div class="hong_template">
+<table class= "tbl_full">
+<thead>
+	<tr>
+		<th>
+			할인 가격 
+		</th>
+		<th>
+			시작 날짜
+		</th>
+		<th>
+			마감 날짜
+		</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+	<td>
+	<div class="input_title">
+		<input type="range" id="money" min="1" max="5000">&nbsp;
+		<input type="text" id="textInput" name="bc_price" size="5">
+	</div>
+
+	</td>
+	<td>
+		 <input type="date" id="starter" name="bc_start_date_before"> 
+	</td>
+	<td>
+		 <input type="date" id="finisher" name="bc_end_date_before">
+	</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+		<div id="takingoutindividuals">
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+		 <table width="800">
+			<tr>
+			<td>
+				<span id="select_random" class="button large neutral">랜덤 선택하기</span>
+				<input id="gorandom" type="text" name="randomnumber" size="5">
+				<span id="totalMem"></span>
+			</td>
+			<td>
+			<span id="select_individuals" class="button large neutral">개별 선택하기</span>
+			</td>
+			<td>
+			<span id="input_coupon" class="button large positive">쿠폰 추가하기</span>
+			</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</tbody>
+</table>
+
+</div>
+</form>

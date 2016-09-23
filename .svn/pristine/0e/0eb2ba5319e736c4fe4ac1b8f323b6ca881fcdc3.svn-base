@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="mypage_container"> 
+        <ul class="mypage_category" >
+            <li class="menu1"><a href="/user/buyInfo/List?type=all"><span class="name">구매내역</span></a>
+            </li> 
+            <li class="menu2"><a href="/user/buyInfo/claim"><span class="name">취소,환불 내역</span></a></li>
+            <li class="menu3 on"><a href="/user/buyInfo/coupon"><span class="name">할인쿠폰</span></a>
+                </li>
+            <li class="menu4"><a href="/user/buyInfo/pointHistory"><span class="name">적립금</span></a></li>
+            <li class="menu5"><a href="/user/wishlist"><span class="name">찜한 상품</span></a></li>
+            <li class="menu8"><a href="/user/qna/talklist?type=talk"><span class="name">문의/답변</span></a>
+                </li>
+            <li class="menu9"><a href="/user/info"><span class="name">개인정보</span></a></li>
+         </ul>
+        <script type="text/javascript">$(function () {
+    $("#coupon_orderby").change(function(){
+        location.href = "/user/buyInfo/coupon?status=AV&orderby="+$(this).val();
+    });
+});
+function goPage(page){
+    this.location.href = "/user/buyInfo/coupon?page="+page+"&status=AV&orderby=C";
+}
+function showUsePdLayer(account_coupon_srl){
+    var top = $(window).scrollTop() + ($(window).height() - $('#coupon_use_pd_layer').height()) / 2 - 200;
+    $("#coupon_use_pd_layer").css({'top':top});
+    $("#coupon_use_pd_title").text($("#mycoupon_title"+account_coupon_srl).text());
+    $("#coupon_use_pd_location").text($("#mycoupon_location"+account_coupon_srl).text());
+    $("#coupon_use_pd_price").html($("#mycoupon_discount"+account_coupon_srl).html());
+    $("#coupon_use_pd_category").html($("#mycoupon_target"+account_coupon_srl).html());
+    $("#coupon_use_pd_layer").show();
+}
+function closeUsePdLayer(){
+    $("#coupon_use_pd_category").html("");
+    $("#coupon_use_pd_layer").hide();
+}
+</script>
+<div class="option_area">
+    <select style="width:px" id="coupon_orderby">
+    <option value="C" selected="selected">최근 발급순</option>
+    <option value="E">마감 임박순</option>
+    </select>
+</div>
+
+<div class="tb_coupon_wrap serviceable">
+    <table >
+    <caption>쿠폰 내역</caption>
+    <colgroup><col width="26%"><col width="11%"><col width="14%"><col width="19%"><col width="30%"></colgroup>
+    <thead>
+    <tr>
+    <th scope="col">쿠폰이름</th>
+    <th scope="col">할인액/율</th>
+    <th scope="col">적용기준</th>
+    <th scope="col">적용대상</th>
+    <th scope="col">유효기간</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td colspan="5" class="coupon_no">보유한 <strong>할인 쿠폰 내역</strong>이 없습니다.</td>
+    </tr>
+    </tbody>
+    </table>
+</div>
+
+<div class="mypage_layer" id="coupon_use_pd_layer" style="top:500px;width:480px;margin-left:-240px;display:none">
+    <h3 class="hdline"><span class="apply_target">적용대상보기</span></h3>
+    <h4 class="select_coupon">선택한 쿠폰</h4>
+    <div class="apply_lst">
+        <table cellspacing="0" border="1" class="tb_type3">
+        <caption>상품 내역</caption>
+        <colgroup>
+        <col width="45%"><col width="36%"><col width="19%">
+        </colgroup>
+        <thead>
+        <tr>
+        <th scope="col">쿠폰이름</th>
+        <th scope="col">적용대상</th>
+        <th scope="col">할인액/율</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td class="coupon" id="coupon_use_pd_title"></td>
+        <td class="type_pv" id="coupon_use_pd_location"></td>
+        <td class="price" id="coupon_use_pd_price"></td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <div class="apply_category">
+        <h4 class="apply_category">적용카테고리</h4>
+        <p class="guide"><span class="ico_info" style="top:-1px"></span><span>일부 상품의 경우, 제외</span>될 수 있습니다.</p>
+        <div class="category_box" id="coupon_use_pd_category"></div>
+    </div>
+    <div class="btn_section">
+        <a href="javascript:closeUsePdLayer();" class="btn_close">닫기</a>
+    </div>
+    <a href="javascript:closeUsePdLayer();" class="btn_close_layer">창 닫기</a>
+</div>
+
+<ul class="coupon_guide_lst">
+<li><span>&amp;midde1e0e4ot;</span>할인쿠폰은 상품 단위로 적용됩니다. 사용 제한 조건도 상품 단위의 상품금액 기준으로 적용됩니다.</li>
+<li><span>·</span>주문 후 거래 취소 시 할인쿠폰 조건에 따라 할인쿠폰 혜택이 회수될 수 있습니다.</li>
+<li><span>·</span>거래 취소 시 사용기간이 남아 있을 경우 쿠폰에 따라 다시 돌려드립니다.</li>
+<li><span>·</span>일부 상품의 경우, 할인쿠폰 적용 대상에서 제외될 수 있습니다.</li>
+</ul>
+    </div>

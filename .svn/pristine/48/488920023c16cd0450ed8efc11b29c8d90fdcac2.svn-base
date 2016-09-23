@@ -1,0 +1,73 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ <%@ taglib prefix="ct" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1" cellpadding="2" cellspacing="1">
+		<tr>
+			<td>글번호</td>
+			<td>${data.notice_id}zz</td>
+		</tr>
+		<tr>
+			<td>제목</td>
+			<td>${bean.data.notice_title }</td>
+		</tr>
+		<tr>
+			<td>작성자</td>
+			<td>${bean.data.m_id }</td>
+		</tr>
+		<tr>
+			<td>작성일</td>
+			<td><fmt:formatDate value="${bean.data.notice_reg_date}" pattern="yyyy-MM-dd HH:mm" /> </td>
+		</tr>
+		<tr>
+			<td>조회수</td>
+			<td>${bean.data.notice_cnt }</td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<td>
+				<ct:replace str="${bean.data.notice_content }" /> 
+			</td>
+		</tr>
+<%-- 		<tr>
+		
+		
+			<c:if test="${data.upfile!='null' && data.upfile!=null && data.upfile!='' }">			
+				<ct:ext var="ext" fileName="${data.upfile }"/>
+				<c:choose>
+					<c:when test="${ext }">
+						<td>이미지</td>				
+						<td>
+							<img src="views/up/${data.upfile }"/>
+						</td>	
+					</c:when>
+					<c:otherwise>
+						<td>파일</td>
+						<td>
+							<a href="views/notice/fileDown.jsp?sys=${data.upfile }">${data.upfile }</a>
+						</td>
+					</c:otherwise>
+				</c:choose>
+			</c:if>
+		
+		
+		</tr> --%>
+			
+		<tr>
+			<td colspan="2">
+				<a href="#">수정</a>
+				<a href="#">삭제</a>
+				<a href="#">답글</a>
+				<a href="list">목록으로</a>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

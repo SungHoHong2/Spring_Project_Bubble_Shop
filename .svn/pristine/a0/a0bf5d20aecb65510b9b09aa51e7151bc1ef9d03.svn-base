@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<style>
+.hong_template{
+	padding : 20px;
+	text-align:center
+}
+</style>
+
+ 
+   <div class = 'hong_template'>
+   		<table class="tbl_full">
+   			<thead>
+   				<tr>
+   					<th width="100">
+   						제품코드 
+   					</th>
+   					<th>
+   						상품명
+   					</th>
+   					<th>
+   						가격 
+   					</th>
+   					<th>
+   						수량
+   					</th>
+   					<th>
+   						등록일
+   					</th>
+   				</tr>
+   			</thead>
+   			<tbody>
+   				<tr>
+   					<td colspan="5">
+   						<div id="detailinfo"></div>
+   					</td>
+   				</tr>
+   			<c:forEach items=""  var = "e"> 
+   			
+   				<tr>
+   					<td>
+   						${e.pname }
+   					</td>
+   					<td>
+  						${e.title }
+   					</td>
+  					<td>
+  						${e.pw }
+  					</td>
+  					<td>
+  						${e.cnt }
+  					</td>
+  					<td>
+  						${e.upfile }
+  					</td>
+   				</tr>
+   			</c:forEach>
+   				
+   			</tbody>
+   			
+   		
+   		</table>
+    </div> 
+    
+    

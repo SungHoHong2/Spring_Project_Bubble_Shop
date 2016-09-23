@@ -1,0 +1,103 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.FileDelete;
+import com.bubble.shop.service.FileUp;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class NoticeController {
+
+	public Object data(String sub, String service, ServiceRepository repository, Bean bean, HttpServletRequest request, HttpSession session)
+	{
+		System.out.println(">>>  service : " + service);
+		Object res	= bean;
+		System.out.println("컨트롤러");
+		switch(service)
+		{
+			case "list" :
+				res = repository.noticeList(bean);
+				break;
+			
+			case "detail" :
+				
+				res = repository.noticeDetail(bean,service);
+				
+				break;
+			
+			case "writeOk":
+				
+				if(bean.getUpfile().getOriginalFilename() != null && !bean.getUpfile().getOriginalFilename().equals(""))
+				{
+				
+					bean.setNotice_user_upfile(bean.getUpfile().getOriginalFilename());   // 박병길.jpg
+					bean.setNotice_upfile(new FileUp().fileUpload(bean, request, "upfile"));  // 박병길_1.jpg
+					
+					System.out.println("업로드 파일명 : "+ bean.getUpfile().getOriginalFilename() );
+					System.out.println("Write 우리저장된 파일 명 : "+ bean.getNotice_upfile() );
+				}
+					
+
+				res = repository.noticeWrite(bean);
+				
+				break;
+			
+			case "pwChkOk":
+				res = repository.noticepwChk(bean,service,request, session);
+				
+				if(bean.getNotice_md().equals("modify") && bean.isNotice_pw_chk())
+					bean.setUrl(sub + "/" + "modify");
+				
+				break;
+			
+			case "modifyOk":
+				if(bean.getUpfile().getOriginalFilename() != null && !bean.getUpfile().getOriginalFilename().equals(""))
+				{
+					bean.setNotice_user_upfile(bean.getUpfile().getOriginalFilename());   // 박병길.jpg
+					bean.setNotice_upfile(new FileUp().fileUpload(bean, request, "upfile"));  // 박병길_1.jpg
+					
+					System.out.println("업로드 파일명 : "+ bean.getUpfile().getOriginalFilename() );
+					System.out.println("Write 우리저장된 파일 명 : "+ bean.getNotice_upfile() );
+				}
+				res = repository.modifyOk(bean);
+				break;
+			
+			case "reply":
+				res = repository.noticeDetail(bean,service);
+				break;
+			
+			case "replyOk":
+				res = repository.noticereply(bean);
+				break;
+				
+			case "fileDelete":
+				bean.setNotice_upfile(request.getParameter("notice_upfile"));
+				System.out.println("hi-----------------------------"+bean.getNotice_upfile());
+				
+				if(bean.getNotice_upfile()!=null || !bean.getNotice_upfile().equals(""))
+				{
+					if(new FileDelete().fileDelete(bean, request))
+					{
+						res = repository.upfile_delete(bean);
+						bean.setNotice_upfile(null);
+						bean.setNotice_user_upfile(null);
+					}
+					
+				}
+				bean.setUrl(sub + "/" + "modify");
+				break;
+
+				
+		}
+
+		return res;
+	}
+	
+	
+	
+}

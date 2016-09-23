@@ -1,0 +1,114 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class AdminController {
+
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "reg_main" :
+				int buf2 = (int) repository.getTotal();				
+				System.out.println("reg_main access : "+buf2);
+				bean.setTotal(buf2);
+				
+				
+				
+			break;
+		
+			case "reg_output" :
+				String buffer = request.getParameter("product_number");
+				
+				bean.setTitle(buffer); //inserting the information into the bean				
+				repository.inputAdminTest(bean);
+				break;
+				
+				
+			case "reg_list" : 
+				int buf = (int) repository.getTotal();				
+				bean.setTotal(buf);
+				   
+				   bean.setTotalPage(bean.getTotal()/bean.getLimit());
+				   
+				   if(bean.getTotal()%bean.getLimit()!=0)
+				   {
+				    bean.setTotalPage(bean.getTotalPage()+1);
+				   }
+				   
+				   bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+				   bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+				   
+				   if(bean.getEndPage()>bean.getTotalPage())
+				   {
+				    bean.setEndPage(bean.getTotalPage());
+				   }
+				   
+				   int start = (bean.getPage()-1)*bean.getLimit()+1;
+				   int end = start + bean.getLimit()-1;
+				   
+				   bean.setStart(start);
+				   bean.setEnd(end);
+				
+				   bean.setData(repository.reglist(bean));
+
+				break;
+				
+			case "reg_detail":
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));
+				
+				bean.setUrl("bs/admin/goods/reg_detail");
+				bean.setRedirect(true);
+			//bs/" + main + "/template
+			break;
+			
+			case "reg_widget1_data":
+					int buf3 = (int) repository.getTotal();				
+					bean.setTotal(buf3);
+				   
+				   bean.setTotalPage(bean.getTotal()/bean.getLimit());
+				   
+				   if(bean.getTotal()%bean.getLimit()!=0)
+				   {
+				    bean.setTotalPage(bean.getTotalPage()+1);
+				   }
+				   
+				   bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+				   bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+				   
+				   if(bean.getEndPage()>bean.getTotalPage())
+				   {
+				    bean.setEndPage(bean.getTotalPage());
+				   }
+				   
+				   start = (bean.getPage()-1)*bean.getLimit()+1;
+				   end = start + bean.getLimit()-1;
+				   
+				   bean.setStart(start);
+				   bean.setEnd(end);
+				
+				   bean.setData(repository.reglist(bean));
+				
+				bean.setUrl("bs/admin/goods/reg_widget1_data");
+				bean.setRedirect(true);
+			break;
+		}
+
+		return res;
+	}
+	
+	
+	
+	
+	
+	
+}

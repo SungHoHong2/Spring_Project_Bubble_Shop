@@ -1,0 +1,374 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    <script type="text/javascript">
+	
+		$(".topSearch").ready(function(){
+			
+			var idx = 0;
+			var oLi = $(".wrap_preview > ul > li");
+
+			$("#srch_value").keyup(function(e){
+				
+				var key = e.keyCode;
+
+				if ($(this).val() != $("#h_hidden").val())
+				{
+					if (!(key >= 37 && key <= 40))
+					{
+						if ($(this).val().replace(/ /g, '').length > 0)
+						{
+							keyword_ajax_call("Y");
+						}
+						else
+						{
+							keyword_list_init();
+						}
+					}
+				}
+				
+			});
+			
+			keyword_ajax_call = function(sType)
+			{
+				$.ajax({
+				    type : "GET"
+				    , async : true
+				    , url : "search_ajax"
+				    , dataType : "html"
+				    , timeout : 3000
+				    , cache : false
+				    , data : "keyword=" + encodeURIComponent($("#srch_value").val()) 
+				    , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+				    , error : function(request, status, error) {
+						//alert("code : " + request.status + "\r\n장애가 발생하였습니다.");
+						//keyword_list_init();
+				    }
+				    , success : function(response, status, request) {
+				    	$("#h_hidden").val($("#srch_value").val());
+				    	
+				    	keyword_list_init();
+				    	
+						if (response.replace(/ /g, '').length > 20)
+						{
+							$('.wrap_preview').append(response);
+							
+							oLi = $(".wrap_preview > ul > li");
+							
+							for (var i = 0; i < oLi.length; i++)
+							{
+								oLi.eq(i).html("<a href='#none' onclick=\"search2('" + oLi.eq(i).text() + "');return false;\">" +
+										oLi.eq(i).text().replace($("#srch_value").val(), "<strong style='color:#eb0c00'>" + $("#srch_value").val() + "</strong>") + "</a>");
+							}
+							if (sType == "Y")
+							{
+								$(".wrap_preview").show();
+							}
+							
+							$(".wrap_preview > ul > li").mouseover(function(){
+								oLi.eq(idx).removeClass("on");
+								idx = $(".wrap_preview > ul > li").index($(this));
+								$(this).addClass("on");
+							});
+						}
+						else
+						{
+							keyword_list_init();
+						}
+						if (oLi.length > 0 && $(".wrap_preview").css("display") == "none")
+						{
+							setTimeout("layer_chk()", 1000);
+						}
+				    }
+				});
+			}
+			
+			layer_chk = function()
+			{
+				if ($("#srch_value").val().replace(/ /g, '').length > 0)
+				{
+					$(".wrap_preview").show();	
+				}
+			}
+				
+		
+			
+			
+			$("#srch_value").keydown(function(e){
+				
+				var key = e.keyCode;
+				
+				switch(key)
+				{
+					case 13 :
+						goSearch();
+						break;
+					case 38 :
+						list_con('U');
+						break;
+					case 40 :
+						list_con('D');
+						break;
+				}
+			
+			});
+			
+			$("#srch_value").click(function(){
+				
+				if ($(".wrap_preview").css("display") == "none")
+				{
+					$(".wrap_preview").css("display", "block");
+				}
+				else
+				{
+					if ($("#srch_value").val().replace(/ /g, '').length > 0)
+					{
+						keyword_ajax_call("N");
+					}
+					$(".wrap_preview").css("display", "none");	
+				}
+				
+			});
+			
+			
+			list_con = function(sGubun)
+			{
+				oLi.eq(idx).removeClass("on");
+				
+				if (oLi.length > 0)
+				{
+					if (sGubun == "U")
+					{
+						if (idx <= 0)
+						{
+							idx = -1;
+							$(".wrap_preview").hide();	
+						}
+						else
+						{
+							idx--;
+							$("#srch_value").val(remove_html(oLi.eq(idx).text()));
+							oLi.eq(idx).addClass("on");
+						}
+					}
+					else
+					{
+						idx++;
+						if (idx >= oLi.length)
+						{
+							idx = 0;	
+						}
+						$(".wrap_preview").show();
+						$("#srch_value").val(remove_html(oLi.eq(idx).text()));
+						oLi.eq(idx).addClass("on");
+					}
+				}
+			}
+
+			search2 = function(key)
+			{
+				$("#srch_value").val(key);
+				keyword_list_init();
+				goSearch();
+				return false;
+			}
+			
+			keyword_list_init = function()
+			{
+				idx = -1;
+				$(".wrap_preview").hide();
+				$(".wrap_preview").children().remove();
+			}
+			
+			getGoodsList = function(id , depth){
+				
+				$("#top_frm").attr("action","/shop/bs/user/shop/goods");
+				$('#bm_id').val(id);
+				$('#bm_depth').val(depth);
+				$("#top_frm").submit();
+
+			
+			}
+			
+			getGoodsDetail = function(g_code){
+				$("#top_frm").attr("action","/shop/bs/user/shop/goodsdetail");
+				$('#g_code').val(parseInt(g_code));
+				$("#top_frm").submit();
+			
+			}
+			
+			goSearch = function(){
+				//공백문자 제거하고 보내기
+				if ($("#srch_value").val().replace(/ /g, '').length > 0)
+				{
+					$("#srch_value").val($.trim($("#srch_value").val()));
+					$("#top_frm").attr("action","searchres");
+					$("#top_frm").submit();
+				}
+				else
+				{
+					$("#srch_value").val("");
+					$("#srch_value").focus();
+				}
+			}
+			/* $('.btn_search').click(){
+         		
+         		$("#top_frm").attr("action","/shop/bs/user/shop/searchres");
+				$("#top_frm").submit();
+         	} */
+			
+			
+			/* 병기리 */
+			mypage = function()
+			{
+				
+				$("#top_frm").attr("action","/shop/bs/user/member/chkpwd");	
+				$("#top_frm").submit();	
+			}
+			
+			cartGo = function()
+			{
+				if('${session_userid}'!='' && '${session_userid}'!=null)
+				{
+					$("#top_frm").attr("action","/shop/bs/user/buy/cart");	
+					$("#top_frm").submit();	
+				}
+				else
+				{
+					alert('회원 전용 서비스입니다.\n로그인 후 이용하실 수 있습니다.');
+				}
+			}
+			
+			
+			/* 병기리끝 */
+
+			bookmarksite = function()
+			{
+			
+				var title = "Bubble Shop";
+				var url = "http://www.naver.com";
+				
+			   // Internet Explorer
+			   if(document.all)
+			   {
+			       window.external.AddFavorite(url, title); 
+			   }
+			   // Google Chrome
+			   else if(window.chrome){
+			      alert("Ctrl+D키를 누르시면 즐겨찾기에 추가하실 수 있습니다.");
+			   }
+			   // Firefox
+			   else if (window.sidebar) // firefox 
+			   {
+			       window.sidebar.addPanel(title, url, ""); 
+			   }
+			   // Opera
+			   else if(window.opera && window.print)
+			   { // opera 
+			      var elem = document.createElement('a'); 
+			      elem.setAttribute('href',url); 
+			      elem.setAttribute('title',title); 
+			      elem.setAttribute('rel','sidebar'); 
+			      elem.click(); 
+			   }
+			} 
+			eventGo= function(notice_id)
+			{
+				
+				$('#notice_id').val(notice_id);
+				$("#top_frm").attr("action","/shop/bs/user/event/detail");
+				$("#top_frm").submit();
+			}
+			
+			$("#srch_value").focus();
+		});
+	
+	</script>
+
+<form id="top_frm" name="top_frm" method="post" action="">    
+	<input type="hidden" id="bm_id" name="bm_id" />
+	<input type="hidden" id="g_code" name="g_code" />
+	<input type="hidden" id="bm_depth" name="bm_depth" />
+	<input type="hidden" id="notice_id" name="notice_id" />
+<div class="nav">
+            <h1><a href="/shop/bs/user/shop/main">bubble shop</a></h1>
+            <h2 class="hidden">글로벌 네비게이션</h2>
+           
+            <ul class="dropdownmenu">
+            	<c:set var="i" value="1" />
+            	<c:forEach items="${bean.menuitem}"  var="m_1depth" >
+            		<c:if test="${m_1depth.bm_par_id==0}">
+            			<li class="m${i} menu">
+            				<c:choose>
+	            				<c:when test="${i==4}">
+	            					<h3><a href="/shop/bs/user/comment/list" >${m_1depth.bm_name}</a></h3>
+	            				</c:when>
+	            				<c:otherwise>
+	            					<h3><a href="" onclick="getGoodsList(${m_1depth.bm_id}, 1); return false;" >${m_1depth.bm_name}</a></h3>
+	            				</c:otherwise>
+            				</c:choose>
+            				<ul>
+            				<c:forEach items="${bean.menuitem}"  var="m_2depth" >
+            						<c:if test="${m_1depth.bm_id==m_2depth.bm_par_id}">
+  	          							<li>
+            								<a href="" onclick="getGoodsList(${m_2depth.bm_id}, 2); return false;">${m_2depth.bm_name}</a>
+            							</li>
+            						</c:if>
+            				</c:forEach>
+            				</ul>
+            			</li>
+            			<c:set var="i" value="${i+1}" />
+            		</c:if>
+            	</c:forEach>
+
+            </ul>
+         </div>
+         <div class="wrap_quick">
+            <div class="inner">
+            	<c:choose>
+					<c:when test="${session_name == ''}">
+						<p class="client"><span></span></p>
+					</c:when>
+					<c:otherwise>
+						<p class="client"><span>${session_name }</span>님 안녕하세요</p>
+					</c:otherwise>
+				</c:choose>
+               <h2 class="hidden">퀵메뉴</h2>
+               <ul class="quick_menu">
+				<c:choose>
+					<c:when test="${session_userid == ''}">
+                  		<li><a href="/shop/bs/user/member/login">로그인</a></li>
+                  		<li><a href="/shop/bs/user/member/signup">회원가입</a></li>
+                  	</c:when>
+					<c:otherwise>
+						<li><a href="#none"></a></li>
+                  		<li><a href="/shop/bs/user/member/logout">로그아웃</a></li>
+                  	</c:otherwise>
+				</c:choose>
+                  <!-- <li><a href="#" onclick="mypage(); return false;">마이페이지</a></li> -->
+                  <li><a href="/shop/bs/user/member/chkpwd">마이페이지</a></li>
+                  <li><a href="#" onclick="cartGo(); return false;">장바구니</a></li>
+                  <li class="c_center"><a href="/shop/bs/user/notice/list">고객센터</a>
+                  	<ul>
+                  		<li><a href="/shop/bs/user/faq/list">FAQ</a></li>
+	                    <li><a href="/shop/bs/user/qna/list">QNA</a></li>
+	                    <li><a href="/shop/bs/user/event/list">EVENT</a></li>	
+                  	</ul>
+                  </li>
+                  <li><a href="#none" onclick="bookmarksite(); return false;">즐겨찾기</a></li>
+               </ul>
+            </div>
+         </div>
+         <div class="topSearch">
+            	<span style="display:none">
+            		<input type="text" id="h_hidden" name="h_hidden" />
+            	</span>
+                  <label for="srch_value" class="hidden">통합검색</label>
+                  <input type="text" title="키워드" id="srch_value" class="searchBox" name="srch_value" value="${bean.srch_value }" />
+                  <a class="btn_search" onclick="goSearch(); return false;"href="">검색</a>
+         </div>
+         <div class="wrap_preview"></div>
+</form>
+         <script type="text/javascript">
+         	
+         </script>

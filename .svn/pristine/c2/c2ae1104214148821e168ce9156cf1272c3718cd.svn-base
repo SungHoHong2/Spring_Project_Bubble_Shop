@@ -1,0 +1,259 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="mypage_header">
+        <h2 class="hidden">마이페이지</h2>
+        <p class="user_welcome"><strong>민경훈</strong>님의 VIP멤버십 등급은 <em class="gold">ORANGE</em>입니다. <a href="/user/memberShip" class="btn">혜택보기</a></p>
+        <ul class="use_lst">
+            <li class="lst1"><a href="/shop/bs/user/member/coupon"><strong class="hidden">할인쿠폰</strong><span class="num">0<span class="line"></span></span></a></li> 
+            <li class="lst3"><a href="/user/buyInfo/List?type=delivery&amp;deliveryStatusType=D4&amp;range=2"><strong class="hidden">배송중</strong><span class="num">0<span class="line"></span></span></a></li> 
+            <li class="lst4"><a href="/user/buyInfo/List?type=ticket&amp;ticketStatusType=AV&amp;range=4"><strong class="hidden">미사용 티켓</strong><span class="num">0<span class="line"></span></span></a></li> 
+            <li class="lst5"><a href="/user/buyInfo/Claim?claim_status=DN"><strong class="hidden">환불완료</strong><span class="num">0<span class="line"></span></span></a></li> 
+        </ul> 
+    </div>
+    <div class="mypage_container"> 
+        <ul class="mypage_category" >
+            <li class="menu1 on"><a href="/shop/bs/user/member/buyInfo"><span class="name">구매내역</span></a></li> 
+            <li class="menu2"><a href="/shop/bs/user/member/claim"><span class="name">취소,환불 내역</span></a></li>
+            <li class="menu3"><a href="/shop/bs/user/member/coupon"><span class="name">할인쿠폰</span></a></li>
+            <li class="menu9"><a href="/shop/bs/user/member/userInfo"><span class="name">개인정보</span></a></li>
+        </ul>
+
+<style type="text/css">
+    .dateCalWrap {width:215px;margin-left:2px;}
+    .dateCalWrap * {border:none !important;}
+    .dateCalWrap .ui-icon {background:url(/static/img/vendor/cal_arrow.gif);width:18px;height:18px;}
+    .dateCalWrap .ui-icon-circle-triangle-e {background-position:-18px 0;}
+    .dateCalWrap .ui-datepicker {width:215px;padding:0;}
+    .dateCalWrap .ui-datepicker th {padding:6px 0;}
+    .dateCalWrap .ui-datepicker td {padding:0;}
+    .dateCalWrap .ui-widget-content {border:none;}
+    .dateCalWrap .ui-datepicker td span, .ui-datepicker td a {padding:6px 0;text-align:center;border:none !important;}
+    .dateCalWrap .ui-state-default {border:none;background-color:#FFFFFF;}
+    .dateCalWrap .ui-state-highlight {border:none;color:#E46800;background-color:#FFEDC1;font-weight:bold;}
+    .dateCalWrap .ui-state-active {color:#FFFFFF;background-color:#E46800;font-weight:bold;}
+    .dateCalWrap .ui-datepicker-week-end * {color:#E20000;}
+    .dateCalWrap .ui-widget-header {border:none;background-color:#FFFFFF;}
+    .dateCalWrap .ui-state-disabled {filter:none;filter:Alpha(Opacity=35);}
+    .dateCalWrap a.ui-state-disabled {display:none;}
+    .dateCalWrap a.ui-state-disabled:hover {background-color:#FFFFFF !important;filter:none;}
+    .dateCalWrap table {border-top:1px solid #707070;}
+    .dateCalWrap table thead tr {border-bottom:1px solid #DDDDDD;}
+</style>
+
+    <div id="buy_list"><div class="date_control al">
+    <ul class="date_lst">
+        <li class="all"><a href="javascript:changeRange(1)">전체</a></li>
+        <li class="month3"><a href="javascript:changeRange(2)" class="on">3개월</a></li>
+        <li class="month6"><a href="javascript:changeRange(3)">6개월</a></li>
+        <li class="year1"><a href="javascript:changeRange(4)">1년</a></li>
+    </ul>
+    <a href="/cs/refund" class="btn_refund_go">더욱 간편해진 환불/교환 안내</a>
+</div>
+<div class="buy_lst">
+    <table cellspacing="0" border="1">
+    <caption class="hidden">구매내역</caption>
+    <colgroup>
+	    <col width="500">
+	    <col width="121">
+	    <col width="139">
+    </colgroup>
+    <thead>
+        <tr>
+            <th scope="colgroup" colspan="2">구매내역</th>
+            <th scope="col">유효기간/배송상태</th>
+            <th scope="col">관리</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="4" class="none_lst">
+                <strong>구매내역이 없습니다.</strong><br>
+                <span>오늘의 티몬</span>에서 알찬 구매 어떠세요?
+                <a href="/" class="btn_go_tmontoday">오늘의 티몬 보러가기</a>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+
+
+    <div class="delivery_process_area">
+        <h3 class="h_delivery_process">배송상태안내</h3>
+        <div class="delivery_process">
+            <ul class="lst_delivery_process">
+            <li><strong>결제완료</strong>판매자가 주문을 확인하기 전입니다.</li>
+            <li><strong>상품준비중</strong>주문하신 상품을 준비 중입니다.</li>
+            <li><strong>배송준비중</strong>준비된 상품이 곧 발송될 예정입니다.</li>
+            <li><strong>배송중</strong>주문하신 상품이 출발하였습니다.</li>
+            <li><strong>배송완료</strong>상품이 고객님께 도착하였습니다.</li>
+            </ul>
+        </div>
+        <ul class="lst_delivery_caution">
+        <li><span>·</span>배송지 수정 및 구매취소는 주문하신 배송상품이 '결제완료' 상태일 때만 가능합니다.</li>
+        <li><span>·</span><em>환불/교환 요청은 '배송완료 다음날부터 7일'까지 가능합니다. (환불은 '배송준비중', 교환은 '배송완료' 상태일 때 부터 요청가능)</em></li>
+        <li><span>·</span>환불/교환 요청 후 1~3일 내에 현대택배에서 상품을 수거하게 되니 잠시 기다려 주세요.</li>
+        </ul>
+    </div>
+
+
+<!-- 사용 상세내역 -->
+<div class="mypage_layer" id="div_multiLayer" style="top:8600px;width:290px;margin-left:-190px;display:none;">
+    <h3 class="hdline"><span class="detail_lst">사용 상세내역</span></h3>
+    <table cellspacing="0" border="1" class="tb_type1">
+    <caption>사용 상세내역</caption>
+    <colgroup>
+    <col width="50%"><col width="50%">
+    </colgroup>
+    <thead>
+    <tr>
+    <th scope="col">사용일</th>
+    <th scope="col">사용내역</th>
+    </tr>
+    </thead>
+    <tbody class="td_type1" id="tbody_multiLayer">
+    </tbody>
+    </table>
+    <div class="btn_section">
+        <a href="javascript:closeMultiLayer();" class="btn_close">닫기</a>
+    </div>
+    <a href="javascript:closeMultiLayer();" class="btn_close_layer">창 닫기</a>
+</div>
+<!-- //사용 상세내역 -->
+
+<!-- 배송지연안내 -->
+<div class="mypage_layer" id="div_deliveryDelayRequestLayer" style="width:370px;display:none;">
+    <h3 class="hdline"><span class="delay_info">배송지연 안내</span></h3>
+    <div class="p_guide p_guide_v2">
+        <span class="ico attention"></span>이용에 불편을 드려 죄송합니다!
+        <span class="dtl">판매자가 등록한 배송지연 내용을 안내해 드립니다.</span>
+    </div>
+    <table cellspacing="0" border="1">
+        <caption>배송지연 안내</caption>
+        <colgroup><col width="30%"><col>
+    </colgroup></table>
+    <div class="btn_section">
+        <a href="javascript:closeDeliveryDelayRequestLayer();" class="btn_cfm">확인</a>
+    </div>
+    <a href="javascript:closeDeliveryDelayRequestLayer();" class="btn_close_layer">창 닫기</a>
+</div>
+
+
+<!-- //사용 상세내역 -->
+
+
+
+
+</div>
+        <br><br>
+
+<script type="text/javascript">
+var buy_list = "/user/buyInfo/buyList?type=all&page=1&range=&deliveryStatusType=&ticketStatusType=&mainBuySrl=";
+$("#buy_list").load(buy_list);
+
+function show_layer(id, type)/*{{{*/
+{
+    if(type) {
+        $("#"+id).center(990);
+        $("#"+id).fadeIn();
+    } else {
+        $("#"+id).center().show();
+    }
+}/*}}}*/
+function hide_layer(id)/*{{{*/
+{
+    $("#"+id).html("");
+    $("#"+id).hide();
+}/*}}}*/
+function page_refresh(id)/*{{{*/
+{
+    if(id == undefined) {
+        location.reload();
+    } else {
+        var pnr = getCookie('mypage_page');
+        if(pnr != null) {
+            var spnr = pnr.split("_",5);
+            var page = spnr[0];
+            var range = spnr[1];
+            var deliveryStatusType =  "";
+            var ticketStatusType =  "";
+            var mainBuySrl = "";
+            if(spnr[2]){
+            	deliveryStatusType =  spnr[2];
+            }           
+            if(spnr[3]){
+            	ticketStatusType =  spnr[3];
+            }
+            if(spnr[4]){
+                mainBuySrl =  spnr[4];
+            }
+            var buy_list = "/user/buyInfo/buyList?type=all&page="+page+"&range="+range+"&deliveryStatusType="+deliveryStatusType+"&ticketStatusType="+ticketStatusType+"&mainBuySrl="+mainBuySrl;
+
+            $("#buy_list").load(buy_list);
+            hide_layer(id);
+        } else {
+            location.reload();
+        }
+    }
+}/*}}}*/
+    function close_window(id)/*{{{*/
+    {
+        $("#"+id).html("");
+        hide_layer(id);
+    }/*}}}*/
+    function occur_error(id, msg)/*{{{*/
+    {
+        var msg = msg ? msg : "시스템 오류로 인해 취소처리가 불가합니다.<br/>잠시 후 재시도 해주세요!";
+        var html = "<div class=\"mypage_layer\" style=\"width:380px;margin-left:-190px;margin-top:-200px;\">";
+        html += "<div class=\"p_cfm_msg\"><span class=\"ico check\"></span>"+msg+"</div>";
+        html += "<div class=\"btn_section\">";
+        html += "<a href=\"javascript:page_refresh('"+id+"');\" class=\"btn_cfm\"><span class=\"hidden\">확인</span></a>";
+        html += "</div>";
+        html += "<a href=\"javascript:page_refresh('"+id+"');\" class=\"btn_close_layer\">창 닫기</a>";
+        html += "</div>";
+
+        $("#"+id).html(html);
+    }/*}}}*/
+    function getTextLength(text) {/*{{{*/
+        var length = 0;
+        if (text) {
+            for (var j=0; j<text.length; j++) {
+                    length++;
+            }
+        }
+        return length;
+    }/*}}}*/
+    function checkLimitLength(input, length) {/*{{{*/
+        if (input && length) {
+            var tmpLength = getTextLength($("#"+input).val());
+            if (tmpLength > length) {
+                alert("최대 "+length+"자 까지만 입력 가능합니다.");
+                var tmp_input_val = $("#"+input).val().substring(0,length);
+                $("#"+input).val(tmp_input_val);
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }/*}}}*/
+    function getReceiptInfo(buy_srl) {/*{{{*/
+        $.ajaxSetup({
+            async: false
+        });
+        var response = '';
+        $.get("/user/buyInfo/showReceipt/"+buy_srl, null, function(data) {
+            response = eval('(' + data + ')');;
+        });
+        return response;
+    }/*}}}*/
+
+    function showSportsTicketPopup(deal_srl) {
+   
+	var targetWin = 'baseballRsvPopup';
+	var url = "/user/buyInfo/SportsTicket/"+ deal_srl;
+
+	rsvWin = window.open(url, targetWin, 'width=870,height=590,scrollbars=no');
+    }
+
+</script>
+<script src="/static/js/alarm.js?v=b8c60b5477825358023e2f453ed6a53011d5ef3b"></script>
+    </div>

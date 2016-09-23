@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+	
+	<script type="text/javascript">
+	
+		$(document).ready(function(){
+			
+			if ('${bean.msg}' != "")
+			{
+				alert('${bean.msg}');
+			}
+			
+			bs_login = function()
+			{
+				if (form_chk(frm, ""))
+				{
+					$("form").submit();
+				}
+			}
+			
+			
+			$("#bs_userid").keyup(function(e){
+				
+				if (e.keyCode == 13)
+				{
+					bs_login();
+				}
+				
+			});
+			
+			$("#bs_pwd").keyup(function(e){
+				
+				if (e.keyCode == 13)
+				{
+					bs_login();
+				}
+				
+			});
+			
+			$("#bs_userid").focus();
+			
+		});
+	
+	</script>
+	
+<form id="frm" name="frm" action="login" method="post">
+<div class="login_ct_wrap" id="login_page">
+	<h1 class="title">
+		LOGIN
+	</h1>
+	<div class="login_ct_box">
+		<form name="loginFrm" id="loginFrm">
+			<fieldset>
+				<legend class="hidden">로그인</legend>
+				<div class="login_ct">
+					<p class="id_ipt">
+						<label for="userid">아이디</label><input type="text" id="bs_userid" name="bs_userid" title="아이디" class="input_txt" maxLength="20" />
+					</p>
+					<p class="pw_ipt">
+						<label for="pwd">비밀번호</label><input type="password" name="bs_pwd" id="bs_pwd" title="비밀번호" class="input_txt" maxLength="15" />
+					</p>
+					<p class="btn_login">
+						<a href="#none" onclick="bs_login(); return false;" id="btn_login">로그인</a>
+					</p>
+					<div class="find">
+						<a href="/shop/bs/user/member/findid" class="id_find">아이디 찾기</a> <span
+							class="bar">|</span> <a href="/shop/bs/user/member/findpw" class="pw_find">비밀번호
+							찾기</a>
+					</div>
+					<p class="txt">아직 버블샵 회원이 아니십니까?</p>
+					<p class="join">
+						<a href="/shop/bs/user/member/signup">버블샵 회원
+							가입하기</a>
+					</p>
+				</div>
+				<div class="banner">
+					<a href="/promotion/happyplus" target="_self"><img
+						src="https://img.tmon.co.kr//deals/banner/banner6_04cd5.jpg"
+						alt="4주년 프로모션" width="388" height="296"> </a>
+				</div>
+			</fieldset>
+
+			<input type="hidden" name="return_url"
+				value="http://www.ticketmonster.co.kr/fashionhome">
+		</form>
+	</div>
+</div>
+</form>

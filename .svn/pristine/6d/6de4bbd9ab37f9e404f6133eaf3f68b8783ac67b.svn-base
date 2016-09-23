@@ -1,0 +1,327 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="cart_area">
+
+        <div class="payment_step">
+            <ul>
+            <li class="step1"><strong class="on">1. 카트</strong><span class="subscription">구매하실 상품을 선택해 주세요.</span></li>
+            <li class="step2"><span class="arr"></span><strong>2. 주문/결제</strong><span class="subscription">구매하실 상품을 결제해 주세요.</span></li>
+            <li class="step3"><span class="arr"></span><strong>3. 결제완료</strong><span class="subscription">결제가 완료되었습니다.</span></li>
+            </ul>
+        </div>
+
+        <table  summary="카트 리스트" class="tbl_cart" style="margin-top:30px">
+    <caption>카트 리스트</caption>
+    <colgroup>
+        <col width="31"><col width="105"><col width="401"><col width="107"><col width="67"><col width="89"><col width="*">
+    </colgroup>
+    <thead>
+        <tr>
+            <th scope="col" class="check"><input type="checkbox" id="check_all" checked="checked"></th>
+            <th scope="col" class="thmb"><span class="hidden">딜 이미지</span></th>
+            <th scope="col" class="deal_info">상품정보</th>
+            <th scope="col" class="amounts">상품금액</th>
+            <th scope="col" class="disc">할인</th>
+            <th scope="col" class="delivery">배송</th>
+            <th scope="col" class="select">선택</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="7">선택상품을<a style="cursor:pointer" class="btn_del btn_remove_cart" id="btn_remove_list">삭제하기</a></td>
+        </tr>
+    </tfoot>
+    <tbody class="cart_tbody">
+        <tr class="empty" style="display:none;">
+            <td colspan="7">
+                <p class="empty_msg">카트에 담긴 상품이 없습니다.</p>
+                </td>
+        </tr>
+                <tr name="deal_row" id="deal_75653041">
+            <td class="check">
+                <input type="checkbox" name="cart_check[]" value="75653041" checked="checked" assocavail="">
+            </td>
+            <td class="thmb">
+                <a href="/deal/75653041" target="_blank" class="thmb_inner" tl:area="CCCO" tl:ord="1" tl:linktype="img"><img src="http://img1.tmon.kr/deals/7565/75653041/75653041_around_fb6c3_1401097418production.jpg" width="106" height="71" alt="">
+</a>
+            </td>
+            <td class="deal_info">
+                                    <a href="/deal/75653041" target="_blank" class="h_deal" title="[아베홀리] 여름 경품이벤트!" tl:area="CCCO" tl:ord="1" tl:linktype="txt">[아베홀리] 여름 경품이벤트!<span class="sico_tag"></span></a>
+                
+                <div>
+                    <div name="buywait_div" style="position:absolute;width:411px;height:110px;display:none"></div>
+                    <ul name="option_area" class="uio_option_area">
+                                                <li name="opt_deal" key="75653041_76405265">
+                            <input type="hidden" name="opt_deal_srl" value="76405265">
+                            <span class="option">
+                                                                01-03)홀리스터 여자 나시_실버 PINK | M                                </span>
+                            <span class="amounts"><em name="opt_amount">16,900</em>원</span>
+                            <span class="uio_option_cnt">
+                                <input type="text" name="edit_opt_cnt" value="1" class="uio_option_input option_count_75653041_0">
+                                    <span class="uio_option_control">
+                                        <a style="cursor:pointer" class="uio_btn_plus">증가</a>
+                                        <a style="cursor:pointer" class="uio_btn_minus">감소</a>
+                                    </span>
+                                </span>
+                                <span class="total"><em name="opt_total_amount">16,900</em>원</span>
+                                </li>
+                            </ul>
+                </div>
+            </td>
+            <td class="amounts"><span><em name="deal_total_amount">16,900</em>원</span></td>
+            <td class="disc">
+                                    <div style="display:none" name="discount_amount" class="saving_amounts">
+                    -<em>0</em>원
+                    </div>
+                
+                <a style="display:none" name="btn_discount" class="btn_sale_lst">할인내역</a>
+            </td>
+            <td class="delivery" rowspan="1">
+                <div name="deal_delivery_amount">
+					<select>
+						<option value="1">직접수령</option>
+						<option value="2">2,5000원</option>
+					</select>                
+                </div>
+	            </td>
+            <td class="select">
+            	<a style="cursor:pointer" class="btn_buy btn_buy_normal">구매하기</a>
+                <a style="cursor:pointer" class="btn_del">삭제하기</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div id="div_calculate_area" class="calculate_area calculate_area_v2">
+    <div class="deal_price">
+        <div class="h_area"><strong>상품금액</strong></div>
+        <div class="result_area"><em id="total_amounts">16,900</em><span class="won">원</span></div>
+    </div>
+    <span class="minus">-</span>
+    <div class="disc_price">
+        <div class="h_area">
+            <strong>할인금액</strong>
+            <div id="div_cartcoupon_apply" style="display:none">
+            <a style="cursor:pointer" id="btn_cartcoupon" class="btn_apply_coupon">카트쿠폰</a>
+            <div id="div_cartcoupon_noti" class="uio_ly_balloon" style="top:-42px;left:40px;z-index:999">
+	            <div class="ly_cart_discount">
+	                <span class="apply" id="span_cartcoupon_noti">카트쿠폰으로 <em class="emphasis">할인</em> 받으세요!</span>
+	                <span class="arr"></span>
+	            </div>
+            </div>
+            </div>
+        </div>
+        <div class="result_area"><em id="total_discount_amounts">0</em><span class="won">원</span></div>
+    </div>
+    <span class="plus">+</span>
+    <div class="delivery_price">
+        <div class="h_area"><strong>배송비</strong></div>
+        <div class="result_area"><em id="total_delivery_amounts">7,000</em><span class="won">원</span></div>
+    </div>
+    <span class="equal">=</span>
+    <div class="payment_price">
+        <div class="h_area"><strong>결제 예정 금액</strong></div>
+        <div class="result_area"><em id="pay_amounts">23,900</em><span class="won">원</span></div>
+        <div class="lpop_saving" style="top:19px;right:24px">
+            총 절약금액: <em id="cart_save_amount">0</em>원
+            <span class="arr"></span>
+        </div>
+        <div class="benefit" id="div_cart_benefit_amount" style="display:none;">
+            <span class="tit">구매시 혜택</span>
+            <strong class="point">적립금 <span><em id="total_benefit_amounts">0</em>원</span> <a style="cursor:pointer" id="btn_benefit" class="btn_detail">상세보기</a></strong>
+        </div>
+    </div>
+</div>
+<div class="btn_area" style="margin:52px 0 50px">
+            <a style="cursor:pointer" class="btn_buy btn_buy_cart">구매하기</a>
+    
+    <div class="in_layer">
+        <a href="/deallist/104153/104609" style="cursor:pointer" class="btn_retry">쇼핑 계속하기</a>
+    </div>
+</div>
+
+<div id="div_guide_buywait" style="display:none">
+    <div class="lpop_wrap2" style="top:44px;left:0">
+        <div class="lpop_cont" style="padding:2px 33px 10px 20px;">
+            <div class="caution_area">
+                <ul>
+                <li>대기 예약 상품 구매 시 매진된 상품 물량이 추가 입고 될 경우 대기자 순으로<br>자동 구매 확정되며 SMS로 구매확정 안내 메시지를 보내드립니다.</li>
+                <li>추가입고가 없을 시 판매종료 7일후 (단, 토/일 공휴일 일 경우 직후 영업일)<br><span>일괄 환불처리</span> 됩니다.</li>
+                </ul>
+            </div>
+        </div>
+        <a style="cursor:pointer" class="buywait_guid_btn_close btn_clse">레이어 닫기</a>
+    </div>
+</div>
+
+<div id="discount_layer" name="discount_layer" class="mypage_layer" style="left:400px;width:370px;display:none">
+    <h3 class="txt_tit">할인 내역</h3>
+    <table cellspacing="0" border="1" class="tb_type2">
+    <caption>할인 내역</caption>
+    <colgroup>
+    <col><col width="90"><col width="90">
+    </colgroup>
+    <thead>
+    <tr>
+    <th scope="col">상품명</th>
+    <th scope="col">구분</th>
+    <th scope="col">할인금액</th>
+    </tr>
+    </thead>
+    <tbody class="td_type1" id="discount_layer_detail"></tbody>
+    </table>
+    <a style="cursor:pointer" onclick="$('#discount_layer').hide();" class="btn_close_layer">창 닫기</a>
+</div>
+
+<div id="benefit_layer" name="benefit_layer" class="mypage_layer" style="left:500px;width:370px;display:none">
+    <h3 class="txt_tit">구매혜택 상세내용</h3>
+    <table cellspacing="0" border="1" class="tb_type2">
+    <caption>구매혜택 상세내용</caption>
+    <colgroup>
+    <col width="118"><col width="82"><col>
+    </colgroup>
+    <thead>
+    <tr>
+    <th scope="col">구매혜택</th>
+    <th scope="col">지급일</th>
+    <th scope="col">상품명</th>
+    </tr>
+    </thead>
+    </table>
+    <div class="scroll tb_scroll" style="height:87px">
+        <table cellspacing="0" border="1" class="tb_type2">
+        <caption>구매혜택 상세내용</caption>
+        <colgroup>
+        <col width="118" style="*width:92px"><col width="82"><col>
+        </colgroup>
+        <tbody id="benefit_layer_tbody">
+        <tr>
+        <td class="point">적립금 <strong>0원</strong></td>
+        <td class="date"></td>
+        <td>[아베홀리] 여름 경품이벤트!</td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <ul class="txt_lst">
+    <li><span class="bu"></span>할인쿠폰 적용 후에는 구매혜택이 변경될 수 있습니다.</li>
+    <li><span class="bu"></span>옵션변경 및 할인쿠폰 적용 후에는 구매혜택이 변경될 수 있습니다.</li>
+    <li><span class="bu"></span>취소/환불 시에는 지급된 구매혜택은 회수될 수 있습니다.</li>
+    </ul>
+    <a style="cursor:pointer" onclick="$('#benefit_layer').hide();" class="btn_close_layer">창 닫기</a>
+</div>
+
+<div id="cartcoupon_confirm_layer" name="cartcoupon_confirm_layer" class="mypage_layer" style="top:280px;left:303px;height:198px;display:none">
+    <h3 class="tit_coupon_apply">쿠폰 적용</h3>
+    <div class="p_caution">
+        카트할인쿠폰으로 변경하시겠습니까?
+        <p class="stxt"><span id="cartcoupon_confirm_deal"></span> 상품에<br><strong class="emps">할인쿠폰이 적용</strong>되어있습니다.</p>
+    </div>
+    <div class="btn_section">
+        <a style="cursor:pointer" id="btn_cartcoupon_confirm" class="btn_cfm">확인</a>
+        <a style="cursor:pointer" onclick="$('#cartcoupon_confirm_layer').hide();" class="btn_cancel">취소</a>
+    </div>
+    <a style="cursor:pointer" onclick="$('#cartcoupon_confirm_layer').hide();" class="btn_close_layer">창 닫기</a>
+</div>
+
+<script src="http://static2.tmon.kr/static/js/cart.js?v=0a8891269df09b22a752f9f617b7b67b6ae0243c"></script>
+<script src="http://static1.tmon.kr/static/js/coupon.js?v=5a9d3af08e352ec05d665f2aa8fb3c14f8fd9971"></script>
+<script src="http://static1.tmon.kr/static/js/cartcoupon.js?v=d023363c5c8f874752e0c7bbc2c8f14c2e5864e0"></script>
+<script>CartManager.setData({"cart":{"count":1,"items":[{"deal_srl":"75653041","selected":true,"coupon_srl":null,"deals":[{"deal_srl":76405265,"count":1,"is_buywait":0}]}]},"deals_info":{"75653041":{"deal_total_amount":16900,"deal_delivery_amount":7000,"user_buy_count":null,"coupon_amount":0,"discount_amount":0,"benefit_amount":0,"benefit_detail":[],"is_cartcoupon":false,"main_deal":{"deal_srl":75653041,"deal_type":"D","title":"[\uc544\ubca0\ud640\ub9ac] \uc5ec\ub984 \uacbd\ud488\uc774\ubca4\ud2b8!","title_list":"\uc544\ubca0\ud640\ub9ac \uacbd\ud488\uc774\ubca4\ud2b8 \uc9c4\ud589\uc911!","deal_img":"http:\/\/img1.tmon.kr\/deals\/7565\/75653041\/75653041_around_fb6c3_1401097418production.jpg","status_type":"AV","deal_amount":16900,"deal_disamount":16900,"delivery_policy":"PER","delivery_amount":7000,"delivery_if_amount":0,"is_message_required":"N","always_sale":"N","one_man_min_count":1,"one_man_max_count":5,"opt_one_man_max_count":5,"max_buy_count":510,"max_count":5888,"reserve_max_count":0,"is_buy_wait":false,"buywait_avail":0,"remain_count":5378,"remain_count_without_reserve":5378,"over_date":false,"is_opt_display":"Y","option_count":3335,"always_sale_opt_view_soon":null,"discount_info":[],"benefit_info":[]},"deals":{"76405265":{"deal_srl":76405265,"deal_type":"D","status_type":"AV","option_title":"01-03)\ud640\ub9ac\uc2a4\ud130 \uc5ec\uc790 \ub098\uc2dc_\uc2e4\ubc84 PINK|M","deal_amount":16900,"deal_disamount":16900,"always_sale":"N","is_buy_wait":false,"one_man_min_count":1,"one_man_max_count":5,"opt_one_man_max_count":5,"max_buy_count":1,"max_count":2,"reserve_max_count":0,"buywait_avail":0,"remain_count":1,"remain_count_without_reserve":1,"over_date":false,"is_opt_display":"Y","is_message_required":"N","message_title":""}}}},"coupon_info":{"94787821":{"amount":3000,"coupon_type":"AMOUNT","min_buy_amount":20000,"max_amount":0,"count":1,"applied":[]}}});
+CartManager.setIsGetCartcoupon(false);
+
+$(function() {
+    Cart.run();
+
+    // # 화면이동 방지
+    $("a[href='#']").click(function(event){
+        event.preventDefault();
+    });
+
+    // 복지카드회원 결제하기 버튼
+    $('#btn_buy_cart_assoc').click(function(event){
+        // 복지카드 지원/비지원딜 함께 구매 체크
+        var assocFlag = '';
+        var isMixed = false;
+        $("input[name='cart_check[]']:checked").each(function(){
+            if(assocFlag != '' && assocFlag != $(this).attr('assocAvail'))
+                isMixed = true;
+            assocFlag = $(this).attr('assocAvail');
+        });
+
+        // 알림 팝업 레이어에서 복지카드 지원/비지원 관련 멘트 제거
+        if(!isMixed)
+            $('#assoc_cart_mixed').hide();
+
+        // 복지카드 지원/미지원 상품을 함께 구입하지 않는 경우
+        //if(!isMixed && assocFlag == 'N')
+        if(!isMixed)
+        {
+            assocClickObj = $('.btn_buy_cart');
+
+            // 복지카드 지원 상품만 구입하는 경우
+            if(assocFlag == 'Y')
+            {
+                // 결제방법 선택 팝업
+                $.fancybox({'href': '#alert_assoc_pay_select', 'modal': true, 'padding': 0});
+            }
+            // 복지카드 미지원 상품만 구입하는 경우
+            else
+            {
+                $(assocClickObj).trigger('click');
+            }
+        }
+        // 함께 구입하는 경우
+        else
+        {
+            // 지원/미지원딜 함께 구매 안내 & 결제방법 선택 팝업
+            $.fancybox({'href': '#alert_assoc_deal_mixed', 'modal': true, 'padding': 0});
+        }
+    });
+
+    // 복지카드 가능 딜 개별 구매 클릭
+    var assocClickObj = null;
+    $("[id^='btn_buy_normal_']").click(function(){
+        CartManager.is_assoc_buy = true;
+        $.fancybox({'href': '#alert_assoc_pay_select', 'modal': true, 'padding': 0});
+        assocClickObj = $(this).next('a');
+    });
+
+    // 복지카드 지원/미지원 딜 동시 구매 결제 선택 레이어 {{{
+    // 복지카드 결제 버튼
+    $('#btn_assoc_buy').click(function(){
+        var isApplyCartcoupon = false;
+        $("input[name='cart_check[]']:checked").each(function(){
+            var tmpCartItem = CartManager.getCartItem($(this).val());
+            if(tmpCartItem.getIsCartcoupon()){
+                if(tmpCartItem.getCouponType() == "CARTM" || tmpCartItem.getCouponType() == "CARTR")
+                    isApplyCartcoupon = true;
+            }
+        });
+        if(isApplyCartcoupon)
+            alert("복지카드로 결제 시, 카트할인쿠폰의 사용이 불가합니다.");
+
+        CartManager.is_assoc_buy = true;
+        $('.btn_buy_cart').trigger('click');
+    });
+
+    // 일반결제 버튼
+    $('#btn_usual_buy').click(function(){
+        CartManager.is_assoc_buy = false;
+        $('.btn_buy_cart').trigger('click');
+    });
+    // }}}
+
+    // 복지카드 지원 딜 개별 구매 결제 선택 이벤트 {{{
+    $('#btn_assoc_pay').click(function(){
+        CartManager.is_assoc_buy = true;
+        $(assocClickObj).trigger('click');
+    });
+    $('#btn_usual_pay').click(function(){
+        CartManager.is_assoc_buy = false;
+        $(assocClickObj).trigger('click');
+    });
+    // }}}
+});
+</script>
+
+    </div>

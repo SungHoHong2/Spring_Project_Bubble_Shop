@@ -1,0 +1,38 @@
+package com.bubble.shop;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class NoticeController {
+
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "list" :
+				res = repository.noticeList(bean);
+				break;
+			
+			case "detail" :
+				res = repository.noticeDetail(bean,service);
+				break;
+			case "writeOk":
+				res = repository.noticeWrite(bean);
+				bean.setRedirect(true);
+				bean.setUrl("redirect:detail?notice_id="+(Integer)bean.getNotice_id());
+				break;
+		}
+
+		return res;
+	}
+	
+	
+	
+}

@@ -1,0 +1,32 @@
+// form 공백체크 - 전문현 추가
+function form_chk(obj)
+{
+	var f_obj = "";
+	for (var i = 0; i < obj.length; i++)
+	{
+		if (obj[i].type == "text" || obj[i].type == "password" || obj[i].type == "select")
+		{
+			f_obj = obj[i].value.replace(/ /g, '');
+			if (f_obj.length == 0)
+			{
+				alert(obj[i].title + "을(를) 입력하세요!");
+				obj[i].focus();
+				return false;
+			}
+		}
+	}
+}
+
+// html tag 제거 - 전문현 추가
+function remove_html(text)
+{
+	var return_text = text;
+	
+	if (return_text.length > 0)
+	{
+		var pattern = /<[^>]+>/g;
+		return_text = return_text.replace(pattern, "");
+	}
+	
+	return return_text;
+}

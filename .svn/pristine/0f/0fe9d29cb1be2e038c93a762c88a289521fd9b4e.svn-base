@@ -1,0 +1,280 @@
+package com.bubble.shop.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.model.Form_Data;
+
+@Service
+public class ServiceRepository {
+
+	@Autowired
+	SqlSessionTemplate SqlSessionTemplate;
+	
+	public Object search_ajax(Bean bean)
+	{
+		bean.setData(SqlSessionTemplate.selectList("mapper.hw_ajax2", bean));
+		return bean;
+	}
+	
+	/*리스트*/
+	public Object noticeList(Bean bean)
+	{
+		System.out.println("bbl_id : " + bean.getBbl_id());
+		
+		bean.setTotal((Integer)(SqlSessionTemplate.selectOne("mapper.total",bean)));
+		
+		bean.setTotalPage(bean.getTotal()/bean.getLimit());
+
+		if(bean.getTotal()%bean.getLimit()!=0)
+			bean.setTotalPage(bean.getTotalPage()+1);
+		
+		bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+		
+		bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+		
+		if(bean.getEndPage()>bean.getTotalPage())
+			bean.setEndPage(bean.getTotalPage());
+		
+		bean.setStart((bean.getPage()-1) * bean.getLimit() + 1);
+		bean.setEnd(bean.getStart() + bean.getLimit() - 1);
+		
+		bean.setData(SqlSessionTemplate.selectList("mapper.noticelist", bean));
+		
+		return bean;
+	}
+	
+	/*상세글*/
+	public Object noticeDetail(Bean bean, String service)
+	{
+		if(service.equals("detail"))
+		{
+			bean.setNotice_cnt((Integer)(SqlSessionTemplate.update("mapper.notice_cnt",bean)));
+		}
+		bean.setData(SqlSessionTemplate.selectOne("mapper.noticedetail",bean));
+		
+		return bean;
+	}
+	
+	
+	/*글쓰기*/
+	public Object noticeWrite(Bean bean)
+	{		
+		bean.setData(SqlSessionTemplate.insert("mapper.noticewrite",bean));
+		
+		bean.setRedirect(true);
+		
+		bean.setUrl("redirect:detail?notice_id="+(Integer)bean.getNotice_id());
+		
+		
+		return bean;
+	}
+	
+	
+	/* 비밀번호 체크*/
+	public Object noticepwChk(Bean bean,String service, HttpServletRequest request)
+	{
+		
+		if(SqlSessionTemplate.selectOne("mapper.noticepwchk",bean)!=null)
+		{	
+			
+			bean.setNotice_pw_chk(true);
+			
+			 /*글삭제*/ 
+			if(bean.getNotice_md().equals("delete"))
+			{
+				SqlSessionTemplate.delete("mapper.noticedelete",bean);
+				
+				bean.setRedirect(true);
+				
+				bean.setUrl("redirect:list");
+			}
+			
+			 /*글수정*/ 
+			if(bean.getNotice_md().equals("modify"))
+			{
+				bean.setData(SqlSessionTemplate.selectOne("mapper.noticedetail",bean));
+			}
+		}
+		else
+		{
+			bean.setNotice_id(bean.getNotice_id());
+			
+			bean.setNotice_md(bean.getNotice_md());
+			
+			bean.setRedirect(true);
+			
+			bean.setUrl("redirect:pwChk?notice_id="+bean.getNotice_id());
+			
+		}
+		
+		return bean;
+	}
+	
+	/*글수정완료*/
+	public Object modifyOk(Bean bean)
+	{
+		SqlSessionTemplate.update("mapper.noticemodifyok",bean);
+		
+		bean.setRedirect(true);
+		
+		bean.setUrl("redirect:detail?notice_id="+(Integer)bean.getNotice_id());
+		
+		return bean;
+	}
+	/* 답글 */
+	public Object noticereply(Bean bean)
+	{
+		
+		SqlSessionTemplate.selectOne("mapper.noticereply_up",bean);
+		
+		bean.setData(SqlSessionTemplate.selectOne("mapper.noticereply_write",bean));
+		
+		bean.setNotice_id(((Bean)SqlSessionTemplate.selectOne("mapper.notice_id_max_select")).getNotice_id());
+		
+		bean.setRedirect(true);
+		
+		bean.setUrl("redirect:detail?notice_id="+(Integer)bean.getNotice_id());
+		
+		return bean;
+	}
+	
+	
+	public Object userid_chk(Bean bean)
+	{
+		if (SqlSessionTemplate.selectOne("mapper.userid_chk", bean) != null)
+		{
+			bean.setMsg("N");
+		}
+		else
+		{
+			bean.setMsg("Y");
+		}
+
+		return bean;
+	}
+	
+	public Object test_list(Bean bean, Form_Data fd)
+	{		
+		System.out.println("ccccc");
+		System.out.println(fd.getList());
+		
+		String res = "", res2 = "";
+		
+		if (fd.getList() != null)
+		{
+			
+			
+			// 데이터 있을때
+			System.out.println("데이터 있다!~");
+			for (int i = 0; i < fd.getList().size(); i++)
+			{
+				res += fd.getList().get(i).getTitle();
+				res2 += fd.getList().get(i).getContent();
+			}
+			
+			System.out.println(res);
+			System.out.println(res2);
+		}
+		else
+		{
+			// 없을때
+			System.out.println("데이터 없다!~");
+		}
+	//	System.out.println(fd.getList().size());
+		//bean.setData(SqlSessionTemplate.insert("mapper.noticewrite",bean));
+		
+		return bean;
+	}
+
+
+	
+	public Object shopHome(Bean bean){
+		
+		bean.setData(SqlSessionTemplate.selectList("mapper.getVisualImg", bean));
+		bean.setBestitem(SqlSessionTemplate.selectList("mapper.getBestItem", bean));
+		
+		return bean;
+	}
+	
+
+//Admin Repository [홍성호]
+	public Object inputAdminTest(Bean bean)
+	{
+			SqlSessionTemplate.insert("mapper.inputadmintest",bean);
+			
+			return null;
+	}
+	
+	public Object reglist(Bean bean)
+	{		
+		return SqlSessionTemplate.selectList("mapper.reglist",bean);	
+	}
+	
+	public Object regdetail(Bean bean)
+	{
+		return SqlSessionTemplate.selectOne("mapper.regdetail",bean);
+	}
+	
+	public Object getTotal()
+	{
+		return SqlSessionTemplate.selectOne("mapper.gettotal");
+	}
+	 	 
+	public Object getShowTotal()
+	{
+		return SqlSessionTemplate.selectOne("mapper.getshowtotal");
+	}
+	
+	public Object reg_input(Bean bean, Form_Data fd)
+	{
+		 if (fd.getList() != null)
+		  {
+		   
+		   for (int i = 0; i < fd.getList().size(); i++)
+		   {
+			   bean.setG_code((int)(Math.random()*999999));
+			   bean.setG_name(fd.getList().get(i).getG_name());
+			   bean.setG_num(fd.getList().get(i).getG_num());
+			   bean.setG_price(fd.getList().get(i).getG_price());
+			   bean.setG_describe(fd.getList().get(i).getG_describe());
+			   bean.setG_imghotitem(fd.getList().get(i).getG_imghotitem());
+			   bean.setG_imgshotitem(fd.getList().get(i).getG_imgshotitem());
+			   bean.setG_imgdetail(fd.getList().get(i).getG_imgdetail());
+			   SqlSessionTemplate.insert("mapper.reg_insert",bean);			   
+		   }
+		   System.out.println("reg_input Successful");
+		  }
+		
+		return bean;
+	}
+	
+	public Object bs_login(Bean bean)
+	{
+		bean.setData(SqlSessionTemplate.selectOne("mapper.bs_login", bean));
+
+		if (bean.getData() != null)
+		{
+			bean.setMsg("Y");
+		}
+		else
+		{
+			bean.setMsg("N");
+		}
+		
+		return bean;
+	}
+	
+
+	public Object reg_findmenu()
+	{
+		return SqlSessionTemplate.selectList("mapper.reg_findmenu");
+	}
+	
+
+//Admin Repository end 		
+}

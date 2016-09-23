@@ -1,0 +1,678 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script type="text/javascript" src="../../../resources/js/common.js"></script>
+<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.min.js"></script>
+
+<script type="text/javascript">
+    
+	function getColorful(FruitLoops, buffing)
+	{
+		var s=0;
+		for(var i=0; i<=buffing.innerHTML; i++)
+		{
+			if(s<4)
+			{
+				$('.'+i).attr('bgcolor',FruitLoops[s]);
+				s++;
+			}
+			
+			else
+			{
+				s=0;
+				$('.'+i).attr('bgcolor',FruitLoops[s]);
+			}
+		}	
+	}
+	
+	function AjaxRequest(urls, ids, datas, detail, tableid, FruitLoops, buffing, exit)
+	{
+		 $.ajax({
+	           type:"GET"
+	           ,async : true
+	           , url : urls
+	           , dataType : "html"
+	           , data : ids+"="+encodeURIComponent(datas) 
+	           , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+	           , success : function(response, status, request) {          
+	         
+	        	//배송현황    
+	   			$(detail).html('');
+	   			$(detail).animate({height: 0},10);
+	   			
+	   			$(detail).append(response);
+	   			var heights = $(tableid).height();
+	   			$(detail).animate({height: heights},500);
+	   			
+	   			$(exit).click(function(){	 			
+	   				getColorful(FruitLoops,buffing);		
+	   	   			$(detail).animate({height: 0},500);
+	   			});
+	   			
+	   			//for delivery purposes
+	   	       $('#fix_button').click(function(){
+	        	   document.frmUpdate.submit();
+	           });
+	           
+	           $('#delete_button').click(function(){	        	   
+	        	   $('#hong_form').attr('action', 'purchase_quit');
+	        	   document.frmUpdate.submit();
+	           });
+	   			
+	   			$('#button_quickform').click(function(){
+	   				 document.quickform.submit();
+	   			});	
+	          }
+		  });	
+	  }
+	
+	$(document).ready(function(){
+		
+		var FruitLoops = new Array('#FFD3D3','#FFECD3','#E3DDFF','#CEFFB3'); 
+		var buffing = document.getElementById('totalnumber');
+
+		getColorful(FruitLoops,buffing);		
+			
+		$('.getBsmember').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("reg_member_detail_purchase", "memberid", 
+					       $(this).attr('value'), '#getdetail', '#hong_detail_table',
+					       FruitLoops, buffing, '.hong_exit');			   
+		});
+		
+		
+		$('.reg_detail').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table_"+text).attr('bgcolor','#2DB4DF');
+
+			   AjaxRequest("reg_detail_purchase", "idtest", 
+				       $(this).attr('value'), '#getdetail', '#hong_detail_table',
+				       FruitLoops, buffing, '.hong_exit');
+		           });
+		
+		$('.bs_quick').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("getbs_quick", "bqid", 
+				       $(this).attr('value'), '#getdetail', '#hong_table',
+				       FruitLoops, buffing, '.hong_exit');
+			   
+		});
+		
+		$('.getOutsider').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("getOutsider", "bpid", 
+			   $(this).attr('value'), '#getdetail', '#hong_detail_table',
+			   FruitLoops, buffing, '.hong_exit');
+			   
+		});
+		
+		$('.getOutsider2').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table2_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("getOutsider2", "bpid", 
+			   $(this).attr('value'), '#getdetail2', '#hong_detail_table2',
+			   FruitLoops, buffing, '.hong_exit2');
+			   
+		});
+		
+		$('.getOutsider3').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table3_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("getOutsider3", "bpid", 
+			   $(this).attr('value'), '#getdetail3', '#hong_detail_table3',
+			   FruitLoops, buffing, '.hong_exit3');
+			   
+		});
+		
+		
+		//// People who are preparing to purchase 
+		$('.getBsmember2').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table2_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("reg_member_detail2", "memberid", 
+				       $(this).attr('value'), '#getdetail2', '#hong_detail_table2',
+				       FruitLoops, buffing, '.hong_exit2');
+		});
+		
+		$('.reg_detail2').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table2_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("reg_detail_purchase2", "idtest", 
+				       $(this).attr('value'), '#getdetail2', '#hong_detail_table2',
+				       FruitLoops, buffing, '.hong_exit2');			
+		       });
+		
+		$('.fixPurchase').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("purchase_fix", "bqid", 
+				       $(this).attr('value'), '#getdetail', '#hong_table',
+				       FruitLoops, buffing, '.hong_exit');	
+		    });
+		
+		$('.fixPurchase2').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table2_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("purchase_fix3", "bqid", 
+				       $(this).attr('value'), '#getdetail2', '#hong_table2',
+				       FruitLoops, buffing, '.hong_exit2');	
+		    });
+		
+		$('.fixPurchase3').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table3_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("purchase_fix2", "bqid", 
+				       $(this).attr('value'), '#getdetail3', '#hong_table3',
+				       FruitLoops, buffing, '.hong_exit3');	
+		    });
+		
+		
+		$('.bs_non_delivery').click(function(){
+	
+			   AjaxRequest("getbs_quick3", "bqid", 
+			   $(this).attr('value'), '#getdetail3', '#hong_table3',
+		       FruitLoops, buffing, '.hong_exit3');
+			
+		});
+		
+		$('.getBsmember3').click(function(){
+
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table3_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("reg_member_detail_purchase2", "memberid", 
+				       $(this).attr('value'), '#getdetail3', '#hong_detail_table3',
+				       FruitLoops, buffing, '.hong_exit3');
+		});
+		
+		$('.reg_detail3').click(function(){
+			
+			   getColorful(FruitLoops,buffing);		
+			   var text= $(this).attr('id');
+			   $("#table3_"+text).attr('bgcolor','#2DB4DF');
+			
+			   AjaxRequest("reg_detail_purchase3", "idtest", 
+				       $(this).attr('value'), '#getdetail3', '#hong_detail_table3',
+				       FruitLoops, buffing, '.hong_exit3');			
+		       });
+		
+	   });
+</script>
+
+<style>
+.hong_template{
+ padding : 20px;
+ width : 800px;
+ margin:0 auto;
+}
+
+.hong_title{
+ padding-top : 40px;
+ width : 800px;
+ margin:0 auto;
+ color : blue;
+ font-size : 20px; 
+}
+
+input {
+    background: transparent;
+    border: none;
+}
+
+#totalnumber{
+	height : 0px;
+	overflow : hidden;
+}
+
+.space{
+	height : 40px;
+}
+
+
+#getdetail{
+	height : 0px;
+	overflow:hidden;
+}
+
+#getdetail2{
+	height : 0px;
+	overflow:hidden;
+}
+
+#getdetail3{
+	height : 0px;
+	overflow:hidden;
+}
+
+/* exit button */
+.hong_exit{
+	width : 0px;
+	float : left;
+	position : relative;
+}
+
+.hong_delete{
+	width : 0px;
+	float : left;
+	left : 50px;
+	position : relative;
+	
+}
+
+.hong_fix{
+	width : 0px;
+	float : left;
+	left : 100px;
+	position : relative;
+	
+}
+
+.hong_exit2{
+	width : 0px;
+	float : left;
+	position : relative;
+}
+
+.hong_exit3{
+	width : 0px;
+	float : left;
+	position : relative;
+}
+
+.hong_delete2{
+	width : 0px;
+	float : left;
+	left : 50px;
+	position : relative;
+	
+}
+
+.hong_fix2{
+	width : 0px;
+	float : left;
+	left : 100px;
+	position : relative;
+	
+}
+
+#wrap_buttons{
+	left : 365px;	
+	position : relative;
+}
+
+#wrap_buttons2{
+	left : 365px;	
+	position : relative;
+}
+
+#wrap_buttons3{
+	left : 365px;	
+	position : relative;
+}
+
+.hong_button{
+ padding : 10px;
+ width : 200px;
+ margin:0 auto;
+ background : #DAE5F6;
+}
+
+.hong_button2{
+ padding : 10px;
+ width : 200px;
+ margin:0 auto;
+ background : #efefef;
+}
+
+.bs_quick{
+	width : 100px;
+}
+</style>
+
+<div class="hong_title">
+	배송현황 
+</div>
+<div class="hong_template">
+	<div id="getdetail">
+	</div>
+	<table class="tbl_full">
+	<thead>
+		<tr>
+			<th>
+				<div id="totalnumber">${bean.bq_total }</div>
+				구매 번호
+			</th>
+			<th>
+				주문 고객 
+			</th>
+			<th>
+				결제 방식
+			</th>
+			<th>
+				결제 금액
+			</th>
+			<th>
+				요청 날짜	
+			</th>
+			<th>
+				구매 개수
+			</th>
+			<th>
+				결제 여부
+			</th>
+			<th>
+			    배송 단계
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:forEach items="${bean.data }" var="e" varStatus="no"> 
+	<c:choose> 
+    <c:when test="${e.bp_status=='Y'&& e.bq_status=='1' || e.bp_status=='Y' && e.bq_status=='2'}">
+	
+		<tr class="${e.bq_id }" id="table_select_${no.index }" bgcolor="">
+			<td>
+				<button class="reg_detail" value="${e.bp_id }" id="select_${no.index }">${e.bp_id }</button> 		
+			</td>
+			<td>
+				<c:choose>
+					<c:when test="${e.bs_id==0}">
+					<button class="getOutsider" value="${e.bp_id }" id="select_${no.index }">비회원</button>			
+					</c:when>
+					<c:otherwise>
+					<button class="getBsmember" value="${e.bs_id }" id="select_${no.index }">회원 ${e.bs_id }</button>		
+					</c:otherwise>
+				</c:choose>
+			</td>
+			<td>
+				<c:choose>
+					<c:when test="${e.bp_price_type==1 }">
+					<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">
+						신용카드		
+					</span>				
+					</c:when>
+					<c:when test="${e.bp_price_type==2 }">
+					<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">
+						무통장입금
+					</span>	
+					</c:when>
+				</c:choose>
+
+			</td>
+			<td>
+				<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">${e.bp_price }</span>
+			</td>
+			<td>
+			<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">
+			 <fmt:formatDate value="${e.bp_reg_date }" pattern="MM-dd HH:mm"/>
+			 </span>
+			</td>
+			<td>
+				<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">${e.bp_cnt }</span>
+			</td>
+				<c:choose>
+					<c:when test="${e.bp_status=='Y'}">
+					<td>
+						<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">지불 </span>
+					</td>
+					</c:when>
+					<c:otherwise>
+					<td bgcolor="#FFD3D3">
+						<span class="fixPurchase" value="${e.bp_id }" id="select_${no.index }">미지불</span>
+					</td>
+					</c:otherwise>
+				</c:choose>				
+			<td>
+				<span class="bs_quick" value="${e.bq_id }" id="select_${no.index }">${e.bq_status } 단계</span>  
+			</td>
+		</tr>
+</c:when>
+</c:choose>		
+	</c:forEach>
+	</tbody>
+	</table>
+	</div>
+	
+<div class="hong_title">
+	수령현황 
+</div>
+<div class="hong_template">
+	<div id="getdetail3">
+	</div>
+	<table class="tbl_full">
+	<thead>
+		<tr>
+			<th>
+			<div id="totalnumber">${bean.bq_total }</div>
+				구매 번호
+			</th>
+			<th>
+				주문 고객 
+			</th>
+			<th>
+				결제 방식
+			</th>
+			<th>
+				결제 금액
+			</th>
+			<th>
+				요청 날짜	
+			</th>
+			<th>
+				구매 개수
+			</th>
+			<th>
+				결제 여부
+			</th>
+			<th>
+			    배송 단계
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:forEach items="${bean.data }" var="e" varStatus="no"> 
+	<c:choose> 
+    <c:when test="${e.bp_status=='Y' && e.bq_status=='0'}">
+	
+		<tr class="${e.bq_id }" id="table3_select_${no.index }" bgcolor="">
+			<td>
+				<button class="reg_detail3" value="${e.bp_id }" id="select_${no.index }">${e.bp_id }</button> 		
+			</td>
+			<td>
+				<c:choose>
+					<c:when test="${e.bs_id==0}">
+					<button class="getOutsider3" value="${e.bp_id }" id="select_${no.index }">비회원</button>			
+					</c:when>
+					<c:otherwise>
+					<button class="getBsmember3" value="${e.bs_id }" id="select_${no.index }">회원 ${e.bs_id }</button>		
+					</c:otherwise>
+				</c:choose>
+			</td>	
+			<td>
+				<c:choose>
+					<c:when test="${e.bp_price_type==1 }">
+					<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">
+						신용카드		
+					</span>				
+					</c:when>
+					<c:when test="${e.bp_price_type==2 }">
+					<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">
+						무통장입금
+					</span>	
+					</c:when>
+				</c:choose>
+			</td>
+			<td>
+				<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">${e.bp_price }</span>
+			</td>
+			<td>
+			 <span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">
+			 <fmt:formatDate value="${e.bp_reg_date }" pattern="MM-dd HH:mm"/>
+			 </span>
+			</td>
+			<td>
+				<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">${e.bp_cnt }</span>
+			</td>
+				<c:choose>
+					<c:when test="${e.bp_status=='Y'}">
+					<td>
+						<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">지불 </span>
+					</td>
+					</c:when>
+					<c:otherwise>
+					<td bgcolor="#FFD3D3">
+						<span class="fixPurchase3" value="${e.bp_id }" id="select_${no.index }">미지불</span>
+					</td>
+					</c:otherwise>
+				</c:choose>				
+			<td>
+				<c:choose>
+					<c:when test="${e.bq_status==0 }">
+					<span class="bs_non_delivery" value="${e.bq_id }" id="select_${no.index }">수령 전</span>  
+					</c:when>
+				</c:choose>
+			</td>
+		</tr>
+</c:when>
+</c:choose>		
+	</c:forEach>
+	</tbody>
+	</table>
+	</div>	
+	
+
+<div class="hong_title">
+미지불 현황
+</div>
+
+<div class="hong_template">
+<div id="getdetail2">
+</div>
+<div class="scrolldiv">
+	<table class="tbl_full">
+	<thead>
+		<tr>
+			<th>
+			<div id="totalnumber">${bean.bq_total }</div>
+				구매 번호
+			</th>
+			<th>
+				주문 고객 
+			</th>
+			<th>
+				결제 방식
+			</th>
+			<th>
+				결제 금액
+			</th>
+			<th>
+				요청 날짜	
+			</th>
+			<th>
+				구매 개수
+			</th>
+			<th>
+				결제 상황
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:forEach items="${bean.data }" var="e" varStatus ="no"> 
+		<c:choose>
+		<c:when test="${e.bp_status=='N'}">
+			<tr class="${e.bq_id }" id="table2_select_${no.index }"  bgcolor="">
+			<td>
+				<button class="reg_detail2" value="${e.bp_id }" id="select_${no.index }">${e.bp_id }</button> 		
+			</td>
+			<td>
+			     <c:choose>
+					<c:when test="${e.bs_id==0}">
+					<button class="getOutsider2" value="${e.bp_id }" id="select_${no.index }">비회원</button>			
+					</c:when>
+					<c:otherwise>
+					<button class="getBsmember2" value="${e.bs_id }" id="select_${no.index }">회원 ${e.bs_id }</button>		
+					</c:otherwise>
+				</c:choose>			
+			</td>
+			<td>
+            <span class="fixPurchase2" value="${e.bp_id }" id="select_${no.index }">			
+				${e.bp_price_type }
+			</span>	
+			</td>
+			<td>
+			<span class="fixPurchase2" value="${e.bp_id }" id="select_${no.index }">
+				${e.bp_price }
+			</span>	
+			</td>
+			<td>
+			 <fmt:formatDate value="${e.bp_reg_date }" pattern="MM-dd HH:mm"/>
+			</td>
+			<td>
+			<span class="fixPurchase2" value="${e.bp_id }" id="select_${no.index }">
+				${e.bp_cnt }
+			</span>	
+			</td>
+			<td>
+	
+				<c:choose>
+					<c:when test="${e.bq_type=='Y' }">
+					    	<form name="frm_accept" method="get" action="purchase_accept">
+							<input type="hidden" name="bq_id" value="${e.bq_id }">
+							<button id="accept" name="accept" value="${e.bp_id }">배송 준비</button>
+							</form>
+					</c:when>
+					<c:when test="${e.bq_type=='N' }">
+							<form name="frm_non_delivery" method="get" action="purchase_non_delivery">
+							<button id="accept2" name="accept2" value="${e.bp_id }">수령 준비</button>
+							</form>
+					</c:when>
+					
+				</c:choose>		
+			</td>
+		</tr>
+		</c:when>
+		</c:choose>
+	</c:forEach>
+	</tbody>
+	</table>
+</div>
+</div>
+
+

@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<form name="quickform" action="changequick" method="post">
+<table id="hong_table" class="tbl_full">
+<thead>
+	<tr>
+		<th>
+		   배송 코드
+		</th>
+		<th>
+			배송 날짜 
+		</th>
+		<th colspan="6">
+			배송 현황
+		</th>
+		<th>
+		    배송 번호
+		</th>
+		<th>
+			상태 변경
+		</th>
+	</tr>
+</thead>
+
+<c:forEach items="${bean.data }" var="e">
+	<tr>
+		<td>
+			${e.bq_code }
+		</td>
+		<td>
+		     <input type="hidden" value="${e.bq_id }" name="bq_id">
+			 <fmt:formatDate value="${e.bq_reg_date }" pattern="MM-dd HH:mm"/>
+		</td>		
+		<c:choose>
+			<c:when test="${e.bq_status=='1' }">
+		    		<td bgcolor="#5dc434">
+		    		 단계 1 
+		    		</td>
+		    		<td bgcolor="#5dc434">
+		    		<input type="radio" value="1" name="bq_status" checked>
+		    		</td>
+		    		<td>
+		    		 단계 2 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="2" name="bq_status">
+		    		</td>
+		    		<td>
+		    		 단계 3 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="3" name="bq_status">
+		    		</td>
+			</c:when>
+			<c:when test="${e.bq_status=='2' }">
+		    		<td>
+		    		 단계 1 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="1" name="bq_status" >
+		    		</td>
+		    		<td bgcolor="#5dc434">
+		    		 단계 2 
+		    		</td>
+		    		<td bgcolor="#5dc434">
+		    		<input type="radio" value="2" name="bq_status" checked>
+		    		</td>
+		    		<td>
+		    		 단계 3 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="3" name="bq_status">
+		    		</td>
+			</c:when>
+			<c:when test="${e.bq_status=='3' }">
+		    		<td>
+		    		 단계 1 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="1" name="bq_status" >
+		    		</td>
+		    		<td>
+		    		 단계 2 
+		    		</td>
+		    		<td>
+		    		<input type="radio" value="2" name="bq_status" >
+		    		</td>
+		    		<td bgcolor="#5dc434">
+		    		 단계 3 
+		    		</td>
+		    		<td bgcolor="#5dc434">
+		    		<input type="radio" value="3" name="bq_status" checked>
+		    		</td>
+			</c:when>		
+		</c:choose>
+		<td>
+			${e.bq_id }
+		</td>
+		<td>
+			<span id="button_quickform" class="button large positive">수정 완료</span>
+		</td>
+	</tr>
+</c:forEach>
+</table>
+</form>

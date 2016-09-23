@@ -1,0 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		document.title = "전문현 테스트 페이지";
+	});
+
+</script>
+<form id="frm" name="frm" method="post">
+	<table border="1" cellspacing="1" cellpadding="1">
+		<tr>
+			<td>제목 1 : <input type="text" name="list[0].title" value="ere" /></td>
+			<td>제목 2 : <input type="text" name="list[1].title" value="dsagfdsaf" /></td>
+			<td>제목 3 : <input type="text" name="list[2].title" value="llmjwekw" /></td>
+			<td>제목 4 : <input type="text" name="list[3].title" value="yhnmju" /></td>
+			<td>제목 5 : <input type="text" name="list[4].title" value="qazxsw" /></td>
+		</tr>
+		
+		<tr>
+			<td>내용 1 : <input type="text" name="list[0].content" value="96" /></td>
+			<td>내용 2 : <input type="text" name="list[1].content" value="qscfgh" /></td>
+			<td>내용 3 : <input type="text" name="list[2].content" value="pluybn" /></td>
+			<td>내용 4 : <input type="text" name="list[3].content" value="tgbnhjklp" /></td>
+			<td>내용 5 : <input type="text" name="list[4].content" value="cvbnmlpoiu" /></td>
+		</tr>
+		
+	</table>
+	<br /><br />
+	<input type="submit" value="전송" />
+</form>
+<br />

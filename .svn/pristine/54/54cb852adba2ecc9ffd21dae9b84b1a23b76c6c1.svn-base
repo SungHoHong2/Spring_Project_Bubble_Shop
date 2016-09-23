@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper">
+	<select id="noticelist" resultType="bean">
+		SELECT * FROM SHOP_NOTICE
+	</select>
+	
+	<select id="noticedetail" resultType="bean" parameterType="bean">
+		SELECT * FROM SHOP_NOTICE WHERE NOTICE_ID = #{id}
+	</select>
+	
+	
+	<select id="hw_ajax2" resultType="bean" parameterType="bean">
+		<![CDATA[
+		select keyword from(
+			select keyword from search_text
+			where case when keyword < 'ㄱ' then substr(keyword, 1, 1) 
+			            when ascii('ㄱ') <= ascii(keyword) and 
+			                 ascii(keyword)<= ascii('ㅎ') then keyword 
+			            when keyword < '나' then 'ㄱ'
+			            when keyword < '다' then 'ㄴ'
+			            when keyword < '라' then 'ㄷ'
+			            when keyword < '마' then 'ㄹ'
+			            when keyword < '바' then 'ㅁ'
+			            when keyword < '사' then 'ㅂ'
+			            when keyword < '아' then 'ㅅ'
+			            when keyword < '자' then 'ㅇ'
+			            when keyword < '차' then 'ㅈ'
+			            when keyword < '카' then 'ㅊ'
+			            when keyword < '타' then 'ㅋ'
+			            when keyword < '파' then 'ㅌ'
+			            when keyword < '하' then 'ㅍ'
+			            else                     'ㅎ'
+			       end = #{keyword}  or keyword like #{keyword}||'%'
+			) aa
+			where rownum < 11
+			order by lengthb(keyword) asc
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	<!-- AdminTestMapper 입니다. [홍성호] -->
+	<select id="inputadmintest" parameterType="bean">
+		insert into notice (title) values 
+ 		(#{title})
+	</select>	
+	
+	<select id="reglist" resultType="bean">
+		select * from notice
+	</select>	
+	
+
+
+</mapper>

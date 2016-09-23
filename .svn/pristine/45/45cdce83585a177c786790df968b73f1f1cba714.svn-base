@@ -1,0 +1,726 @@
+package com.bubble.shop;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.bubble.shop.model.Bean;
+import com.bubble.shop.model.File_Data;
+import com.bubble.shop.model.Form_Data;
+import com.bubble.shop.service.FileUp;
+import com.bubble.shop.service.ServiceRepository;
+
+@Controller()
+public class AdminController {
+
+	public Bean PageMaker(int total)
+	{
+		Bean bean = new Bean();
+		bean.setTotal(total);
+		   
+		   bean.setTotalPage(bean.getTotal()/bean.getLimit());
+		   
+		   if(bean.getTotal()%bean.getLimit()!=0)
+		   {
+		    bean.setTotalPage(bean.getTotalPage()+1);
+		   }
+		   
+		   bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+		   bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+		   
+		   if(bean.getEndPage()>bean.getTotalPage())
+		   {
+		    bean.setEndPage(bean.getTotalPage());
+		   }
+		   
+		   int start = (bean.getPage()-1)*bean.getLimit()+1;
+		   int end = start + bean.getLimit()-1;
+		   
+		   bean.setStart(start);
+		   bean.setEnd(end);
+		
+		return bean;
+	}
+	
+	public Object data(String service, ServiceRepository repository, Bean bean, HttpServletRequest request,
+			Form_Data fd)
+	{
+		Object res	= bean;
+		
+		switch(service)
+		{
+			case "reg_main" :
+				int buf2 = (int) repository.getTotal();				
+				bean.setTotal(buf2);
+				bean.setG_show_hot_total((int)repository.getShowTotal());				
+			break;
+			
+			case "reg" :
+				
+				bean.setData(repository.reg_findmenu());
+				
+				if(fd.getList()!=null)
+				{
+				
+				if (fd.getList().get(0).getG_imghotitems()!= null)
+				{	
+					for (int i = 0; i < fd.getList().size(); i++)
+					{
+						if (!fd.getList().get(i).getG_imghotitems().getOriginalFilename().equals("") && fd.getList().get(i).getG_imghotitems().getOriginalFilename() != null)
+						{
+							
+							bean.setUpfile(fd.getList().get(i).getG_imghotitems());
+							fd.getList().get(i).setRename_g_imghotitem(new FileUp().fileUpload(bean, request, "up_img"));
+							
+							bean.setUpfile(fd.getList().get(i).getG_imgshotitems());
+							fd.getList().get(i).setRename_g_imgshotitem(new FileUp().fileUpload(bean, request, "up_img"));
+
+							bean.setUpfile(fd.getList().get(i).getG_imgdetails());
+							fd.getList().get(i).setRename_g_imgdetail(new FileUp().fileUpload(bean, request, "up_img"));
+
+							bean.setUpfile(fd.getList().get(i).getG_imglists());
+							fd.getList().get(i).setRename_g_imglist(new FileUp().fileUpload(bean, request, "up_img"));
+														
+							System.out.println(i + "번 - 업로드 파일명 : " + fd.getList().get(i).getG_imghotitems().getOriginalFilename());
+							System.out.println(i + "번 - 저장된 파일명 : " + fd.getList().get(i).getRename_upfile());
+						}
+						else
+						{
+							System.out.println("첨부 -- 없다");
+						}
+					}
+				}
+			}
+				
+			    repository.reg_input(bean, fd, request);
+				
+			    System.out.println("G_Code : "+bean.getG_code());
+			    
+			    repository.bs_goods_group(bean, fd, request);
+				
+				
+			break;
+		
+			case "reg_output" :
+				String buffer = request.getParameter("product_number");				
+				bean.setTitle(buffer); //inserting the information into the bean				
+				repository.inputAdminTest(bean);
+				break;
+				
+				
+			case "reg_list" : 
+				  int total = (int) repository.getTotal();		
+				
+				   bean.setTotal(total);
+				   
+				   bean.setTotalPage(bean.getTotal()/bean.getLimit());
+				   
+				   if(bean.getTotal()%bean.getLimit()!=0)
+				   {
+				    bean.setTotalPage(bean.getTotalPage()+1);
+				   }
+				   
+				   bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+				   bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+				   
+				   if(bean.getEndPage()>bean.getTotalPage())
+				   {
+				    bean.setEndPage(bean.getTotalPage());
+				   }
+				   
+				   int start = (bean.getPage()-1)*bean.getLimit()+1;
+				   int end = start + bean.getLimit()-1;
+				   
+				   bean.setStart(start);
+				   bean.setEnd(end);
+				
+				bean.setData(repository.reglist(bean));
+				
+				break;
+				
+			case "reg_detail":
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));				
+				bean.setUrl("bs/admin/goods/reg_detail");
+				bean.setRedirect(true);
+			break;
+		
+			case "reg_detail2":
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));				
+				bean.setUrl("bs/admin/goods/reg_detail2");
+				bean.setRedirect(true);
+			break;
+			
+			case "reg_detail3":
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));				
+				bean.setUrl("bs/admin/goods/reg_detail3");
+				bean.setRedirect(true);
+			break;
+			
+			case "reg_detail_purchase":
+				System.out.println("reg_detatil : "+request.getParameter("idtest"));
+				bean.setBp_id(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail_purchase(bean));		
+				System.out.println("finish");
+				bean.setUrl("bs/admin/goods/reg_detail_purchase");
+				bean.setRedirect(true);
+			break;
+			
+			case "reg_detail_purchase_detail":
+				System.out.println("reg_detail_purchase_detail :"+request.getParameter("idtest"));
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));				
+				bean.setUrl("bs/admin/goods/reg_detail_purchase_detail");
+				bean.setRedirect(true);
+			break;
+			
+			
+			case "reg_widget1_data":
+				int buf3 = (int) repository.getTotal();		
+				bean.setData(repository.reglist(PageMaker(buf3)));
+				bean.setUrl("bs/admin/goods/reg_widget1_data");
+				bean.setRedirect(true);
+			break;
+			
+			case "widget_detail_data":
+				bean.setG_code(Integer.parseInt(request.getParameter("idtest")));
+				bean.setData(repository.regdetail(bean));
+				
+				bean.setUrl("bs/admin/goods/widget_detail_data");
+				bean.setRedirect(true);
+			break;
+			
+			case "reg_widget2_data" :
+				buf3 = (int) repository.getTotal();							
+				bean.setData(repository.reglist(PageMaker(buf3)));
+				bean.setUrl("bs/admin/goods/reg_widget2_data");
+				bean.setRedirect(true);
+			break;
+			
+			case "display_product" : 
+				
+				int buf = (int) repository.getTotal();	
+					bean.setTotal(buf);
+				    bean.setStart(0);
+				    bean.setEnd(bean.getTotal());
+				    					 	
+				    System.out.println(bean.getTotal());
+				    
+					   String [] buffings = (String[]) bean.getBeanArray();
+					   
+					   if(bean.getBeanArray()!=null)
+					   {
+					   
+					   if(buffings[0].equals("0"))
+					   {
+						   System.out.println("going down");
+						   repository.showdown(bean);
+					   }
+					   else
+					   {
+						   System.out.println("going up");
+						   repository.showup(bean);
+
+					   }
+					   }
+					   
+
+				    bean.setData(repository.reglist(bean));	
+				
+			break;
+		
+			case  "reg_menu" :
+				Integer bmid = Integer.parseInt(request.getParameter("menu"));
+				System.out.println("Admin : "+request.getParameter("menu"));
+				
+				bean.setBm_id(bmid); 
+				bean.setData(repository.reg_findmenu2(bean));
+				
+				bean.setUrl("bs/admin/goods/reg_menu");
+				bean.setRedirect(true);
+			break;
+			
+			case  "reg_menu2" :
+				bmid = Integer.parseInt(request.getParameter("menu"));
+				System.out.println("Admin : "+request.getParameter("menu"));
+				
+				bean.setBm_id(bmid); 
+				bean.setData(repository.reg_findmenu2(bean));
+				
+				bean.setUrl("bs/admin/goods/reg_menu2");
+				bean.setRedirect(true);
+			break;
+			
+			case "member_list" :
+		        System.out.println("member on ");
+				
+				total = (int)repository.getMemTotal();  
+			    				
+			    bean.setTotal(total);
+			       
+			       bean.setTotalPage(bean.getTotal()/bean.getLimit());
+			       
+			       if(bean.getTotal()%bean.getLimit()!=0)
+			       {
+			        bean.setTotalPage(bean.getTotalPage()+1);
+			       }
+			       
+			       bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+			       bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+			       
+			       if(bean.getEndPage()>bean.getTotalPage())
+			       {
+			        bean.setEndPage(bean.getTotalPage());
+			       }
+			       
+			        start = (bean.getPage()-1)*bean.getLimit()+1;
+			        end = start + bean.getLimit()-1;
+			       
+			        bean.setStart(start);
+			        bean.setEnd(end);
+				
+				
+			        bean.setData(repository.reg_members(bean));
+			break;
+			
+			case "reg_member_detail" : 
+				bean.setBs_id(Integer.parseInt(request.getParameter("memberid")));
+				bean.setData(repository.getMemberDetail(bean));
+				bean.setUrl("bs/admin/admin_member/reg_member_detail");
+				bean.setRedirect(true);				
+			break;		
+			
+			case "reg_member_detail2" : 
+				bean.setBs_id(Integer.parseInt(request.getParameter("memberid")));
+				bean.setData(repository.getMemberDetail(bean));
+				bean.setUrl("bs/admin/admin_member/reg_member_detail2");
+				bean.setRedirect(true);				
+			break;	
+			
+			
+			case "reg_member_detail_purchase" : 
+				bean.setBs_id(Integer.parseInt(request.getParameter("memberid")));
+				bean.setData(repository.getMemberDetail(bean));
+				bean.setUrl("bs/admin/admin_member/reg_member_detail_purchase");
+				bean.setRedirect(true);				
+			break;	
+			
+			case "reg_member_detail_purchase2" : 
+				bean.setBs_id(Integer.parseInt(request.getParameter("memberid")));
+				bean.setData(repository.getMemberDetail(bean));
+				bean.setUrl("bs/admin/admin_member/reg_member_detail_purchase2");
+				bean.setRedirect(true);				
+			break;	
+			
+			case "reg_member_specific_detail" :
+
+				String testing = request.getParameter("memberid");
+				
+				String bufid = testing.substring(testing.lastIndexOf('/')+1);
+				String command=testing.substring(0,testing.lastIndexOf('/'));
+				
+				System.out.println("command : "+command+"///  id : "+bufid);
+				
+				if(command.equals("bs_participant"))
+				{
+					bean.setBs_id(Integer.parseInt(bufid));
+					bean.setData(repository.getParticipantData(bean));
+					bean.setUrl("bs/admin/admin_member/bs_participant_data");	
+				}
+				
+				else if(command.equals("bs_basket"))
+				{
+					bean.setBs_id(Integer.parseInt(bufid));
+					bean.setData(repository.getBasketData(bean));
+					bean.setUrl("bs/admin/admin_member/bs_basket_data");	
+				}
+				
+				else if(command.equals("bs_purchase"))
+				{
+					System.out.println("purchase on");
+					bean.setBs_id(Integer.parseInt(bufid));
+					bean.setData(repository.getPurchaseData(bean));
+					bean.setUrl("bs/admin/admin_member/bs_purchase_data");	
+				}
+				
+				else{
+					bean.setUrl("bs/admin/admin_member/reg_member_specific_detail");	
+				}
+				
+				bean.setRedirect(true);
+			break;	
+			
+			case "after_member_list" :
+				
+				Integer id = Integer.parseInt(request.getParameter("id"));				
+				bean.setBs_id(id);
+				repository.reg_member_delete(bean);
+			break;
+			
+			case "member_input_result" : 
+				repository.reg_member_input(bean);			
+			break;
+			
+			case "member_fix" :
+				testing = request.getParameter("id");
+				bean.setBs_id(Integer.parseInt(testing));
+				bean.setData(repository.getMemberDetail(bean));				
+				break;
+			
+			case "member_update_result" :
+
+				 repository.reg_member_update(bean);	
+			break;
+			
+			case "reg_list_delete" :
+				bean.setG_code(Integer.parseInt(request.getParameter("id")));
+				repository.reg_list_delete(bean);
+			break;
+			
+			case "reg_list_update" :	
+				System.out.println("reg_list_update go");
+				
+				bean.setG_code(Integer.parseInt(request.getParameter("id")));
+				bean.setData(repository.reg_list_update(bean));				
+			break;
+			
+			case "reg_list_update_input" :
+				
+				System.out.println("AdmingController o n");
+			    repository.reg_list_update_input(bean, fd, request);
+
+			break;
+			
+			case "testupload" :
+				System.out.println("testupload");
+				
+				if (fd.getList() != null)
+				{
+					for (int i = 0; i < fd.getList().size(); i++)
+					{
+						if (!fd.getList().get(i).getUpfile().getOriginalFilename().equals("") && fd.getList().get(i).getUpfile().getOriginalFilename() != null)
+						{
+							bean.setUpfile(fd.getList().get(i).getUpfile());
+							fd.getList().get(i).setRename_upfile(new FileUp().fileUpload(bean, request, "up_img"));
+							System.out.println(i + "번 - 업로드 파일명 : " + fd.getList().get(i).getUpfile().getOriginalFilename());
+							System.out.println(i + "번 - 저장된 파일명 : " + fd.getList().get(i).getRename_upfile());
+						}
+						else
+						{
+							System.out.println("첨부 -- 없다");
+						}
+					}
+				}
+				
+			break;
+			
+			case "create_coupons" :
+			System.out.println("create Coupons is on");
+			
+			break;
+			
+			case  "distributing_coupons" : 
+			System.out.println("distrubtion is on");
+
+			repository.distributeCoupons(bean, fd);
+
+			break;
+			
+			case  "individuals" :
+			System.out.println("individuals is on");
+			
+			
+			total = (int)repository.getMemTotal();  
+		    				
+		    bean.setTotal(total);
+		       
+		       bean.setTotalPage(bean.getTotal()/bean.getLimit());
+		       
+		       if(bean.getTotal()%bean.getLimit()!=0)
+		       {
+		        bean.setTotalPage(bean.getTotalPage()+1);
+		       }
+		       
+		       bean.setStartPage((bean.getPage()-1)/bean.getPageLimit()*bean.getPageLimit()+1);
+		       bean.setEndPage(bean.getStartPage()+bean.getPageLimit()-1);
+		       
+		       if(bean.getEndPage()>bean.getTotalPage())
+		       {
+		        bean.setEndPage(bean.getTotalPage());
+		       }
+		       
+		        start = (bean.getPage()-1)*bean.getLimit()+1;
+		        end = start + bean.getLimit()-1;
+		       
+		        bean.setStart(start);
+		        bean.setEnd(end);
+			
+		    bean.setData(repository.reg_members(bean));
+			
+			bean.setUrl("bs/admin/admin_member/individuals");
+			bean.setRedirect(true);
+			break;
+				
+			case "availableMembers" :
+				
+				bean.setTotal((int)repository.getMemTotal());  
+
+				bean.setUrl("bs/admin/admin_member/availableMembers");
+				bean.setRedirect(true);
+			break;
+			
+			case "gorandom" :
+				
+				bean.setRandompointer(Integer.parseInt(request.getParameter("randomnum")));
+				bean.setData(repository.getRandomApplicants(bean));
+				
+				bean.setUrl("bs/admin/admin_member/gorandom");
+				bean.setRedirect(true);
+				break;
+				
+			case "purchase_list" :				
+				System.out.println("purchase_list is on");
+				Integer buffing = (Integer) repository.admin_purchase_bq_total();
+				bean.setBq_total(buffing);
+				bean.setData(repository.admin_purchase_list());				
+			break;
+			
+			case "purchase_widget_detail" :
+				System.out.println("widget detail on");
+				bean.setUrl("bs/admin/admin_purchase/purchase_widget_detail");
+				bean.setRedirect(true);
+			break;
+			
+			case "getbs_quick" :
+				bean.setBq_id(Integer.parseInt(request.getParameter("bqid")));
+				bean.setData(repository.getBs_quick(bean));
+				bean.setUrl("bs/admin/admin_purchase/getbs_quick");
+				bean.setRedirect(true);
+			break;
+			
+			case "getbs_quick3" :
+				bean.setBq_id(Integer.parseInt(request.getParameter("bqid")));
+				bean.setData(repository.getBs_quick(bean));
+				bean.setUrl("bs/admin/admin_purchase/getbs_quick3");
+				bean.setRedirect(true);
+			break;
+			
+			
+			case "getbs_quick2" :
+				bean.setBq_id(Integer.parseInt(request.getParameter("bqid")));
+				bean.setData(repository.getBs_quick(bean));
+				bean.setUrl("bs/admin/admin_purchase/getbs_quick2");
+				bean.setRedirect(true);
+			break;
+			
+			case "purchase_widget" :
+			  				
+				  bean.setUrl("bs/admin/admin_purchase/purchase_widget");
+				  bean.setRedirect(true);
+			break;
+			
+			case "purchase_non_delivery" :
+				  System.out.println("setBp_id : "+request.getParameter("accept2"));
+				  bean.setBp_id(Integer.parseInt(request.getParameter("accept2")));
+				  repository.getBs_nonDeliveryGrant(bean);				
+			break;
+			
+			case "purchase_accept" :				  
+				  bean.setBp_id(Integer.parseInt(request.getParameter("accept")));
+				  repository.getBs_purchaseGrant(bean);
+				  
+				  String codings = "";
+				  for(int i=0; i<3; i++)
+				  {
+					  if(i==0)
+					  {
+						  codings+=(int)(Math.random()*99999);
+					  }
+					  else
+					  codings+="-"+(int)(Math.random()*99999);  
+				  }				  
+				  bean.setBq_code(codings);
+
+				  bean.setBq_id(Integer.parseInt(request.getParameter("bq_id")));
+				  repository.initialBs_Quick(bean);				  
+			break;
+			
+			case "purchase_fix" :				  
+				  bean.setBp_id(Integer.parseInt(request.getParameter("bqid")));
+				  bean.setData(repository.getBS_purchaseWhole(bean));
+				  bean.setUrl("bs/admin/admin_purchase/purchase_fix");
+				  bean.setRedirect(true);
+			break;
+			
+			case "purchase_fix2" :				  
+				  bean.setBp_id(Integer.parseInt(request.getParameter("bqid")));
+				  bean.setData(repository.getBS_purchaseWhole(bean));
+				  bean.setUrl("bs/admin/admin_purchase/purchase_fix2");
+				  bean.setRedirect(true);
+			break;
+			
+			case "purchase_fix3" :				  
+				  bean.setBp_id(Integer.parseInt(request.getParameter("bqid")));
+				  bean.setData(repository.getBS_purchaseWhole(bean));
+				  bean.setUrl("bs/admin/admin_purchase/purchase_fix3");
+				  bean.setRedirect(true);
+			break;
+			
+			case "purchase_Update" :
+				  
+				  repository.updatePurchase(bean);
+			break;
+			
+			case "purchase_quit" :
+				  repository.quitPurchase(bean);
+			break;
+			
+			case "changequick" :
+				  repository.changequick(bean);
+			break;
+			
+			case "purchase_fucked" :
+				bean.setData(repository.getBadPurchase());
+			break;
+			
+			case "distribute_coupons" :
+				bean.setData(repository.getDistributedCoupons());
+			break;
+			
+			case "bs_coupon_detail" :
+				Integer keyword = Integer.parseInt(request.getParameter("keyword"));
+				bean.setData(repository.getBsCouponOne(keyword));
+				bean.setUrl("bs/admin/admin_member/bs_coupon_detail");
+				bean.setRedirect(true);				
+			break;
+			
+			case "bs_coupon_detail_fix" :								
+				repository.updateBsCoupon(bean);
+			break;
+			
+			case "distribute_coupons_delete" :
+				repository.bs_coupon_delete(bean);
+			break;
+			
+			case "bs_menu" :
+				System.out.println("bs_menu go");
+			break;
+			
+			case "bs_menu_detail" :
+				System.out.println("menu_detail go ");
+				System.out.println(request.getParameter("keyname"));
+				bean.setBm_id(Integer.parseInt(request.getParameter("keyname")));
+				
+				bean.setData(repository.get2ndmenu(bean));
+				
+				bean.setUrl("bs/admin/admin_modify/bs_menu_detail");
+				bean.setRedirect(true);		
+			break;
+			
+			case "2ndMenuUpload" : 
+				repository.SecondMenuUpload(bean);
+			break;
+			
+			case "bs_menu_detail2" :
+				System.out.println(request.getParameter("keyname"));								
+				bean.setBm_id(Integer.parseInt(request.getParameter("keyname")));
+				bean.setData(repository.get2ndmenu(bean));				
+				bean.setUrl("bs/admin/admin_modify/bs_menu_detail2");
+				bean.setRedirect(true);		
+			break;
+			
+			case "ajaxdelete" :
+				System.out.println(request.getParameter("keyname"));
+				System.out.println(request.getParameter("deletekey"));
+				
+				Integer deletekey = Integer.parseInt(request.getParameter("keyname"));
+				repository.deleteMenu(deletekey);
+				System.out.println("delete 1");
+				repository.deleteMenuChild(deletekey);
+				System.out.println("delete 2");
+			break;
+			
+			case "easykill_result" :				
+				repository.easy_kill(bean, fd, request);
+			break;
+			
+			case "bs_good_detail" :
+				
+				Integer getkeys = Integer.parseInt(request.getParameter("bs_good_detail_id"));
+				System.out.println("bs_good_detail : "+getkeys);
+
+				bean.setData(repository.getBs_good_detail(getkeys));
+				bean.setUrl("bs/admin/goods/bs_good_detail");
+				bean.setRedirect(true);			
+			break;
+			
+			case "bs_good_detail_delete" :
+				
+				getkeys = Integer.parseInt(request.getParameter("getkeys"));
+				bean.setBgd_id(Integer.parseInt(request.getParameter("bs_good_detail_id")));
+				System.out.println("delete : "+getkeys);
+				
+				repository.bs_good_detail_delete(bean);
+
+				bean.setData(repository.getBs_good_detail(getkeys));
+				bean.setUrl("bs/admin/goods/bs_good_detail");
+				bean.setRedirect(true);
+			break;
+		
+			case "initialQuicky" :
+					System.out.println("initialQuick on");
+					bean.setBq_id(Integer.parseInt(request.getParameter("idtest")));
+					repository.initialQuicky(bean);
+			break;
+			
+			case "purchase_finished" :
+				buffing = (Integer) repository.admin_purchase_bq_total();
+				bean.setBq_total(buffing);
+				bean.setData(repository.admin_purchase_list());	
+			break;
+			
+			case "getOutsider" :
+				
+				buffing = Integer.parseInt(request.getParameter("bpid"));
+				bean.setBp_id(buffing);
+				
+				bean.setData(repository.getBs_Guest(bean));
+
+				bean.setUrl("bs/admin/admin_purchase/getOutsider");
+				bean.setRedirect(true);
+			break;
+			
+			case "getOutsider2" :
+				
+				buffing = Integer.parseInt(request.getParameter("bpid"));
+				bean.setBp_id(buffing);
+				
+				bean.setData(repository.getBs_Guest(bean));
+
+				bean.setUrl("bs/admin/admin_purchase/getOutsider2");
+				bean.setRedirect(true);
+			break;
+			
+			case "getOutsider3" :
+				
+				buffing = Integer.parseInt(request.getParameter("bpid"));
+				bean.setBp_id(buffing);
+				
+				bean.setData(repository.getBs_Guest(bean));
+
+				bean.setUrl("bs/admin/admin_purchase/getOutsider3");
+				bean.setRedirect(true);
+			break;
+			
+			
+		}
+		return res;
+	}
+
+}

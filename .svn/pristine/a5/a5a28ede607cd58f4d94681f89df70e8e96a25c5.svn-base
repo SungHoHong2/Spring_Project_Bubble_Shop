@@ -1,0 +1,812 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div class="mypage_container" > 
+         <ul class="mypage_category" >
+            <li class="menu1"><a href="/user/buyInfo/List?type=all"><span class="name">구매내역</span></a>
+            </li> 
+            <li class="menu2"><a href="/user/buyInfo/claim"><span class="name">취소,환불 내역</span></a></li>
+            <li class="menu3"><a href="/user/buyInfo/coupon"><span class="name">할인쿠폰</span></a>
+                </li>
+            <li class="menu5"><a href="/user/wishlist"><span class="name">찜한 상품</span></a></li>
+            <li class="menu8"><a href="/user/qna/talklist?type=talk"><span class="name">문의/답변</span></a>
+                </li>
+            <li class="menu9 on"><a href="/user/info"><span class="name">개인정보</span></a></li>
+         </ul>
+            <script src="/static/js/form_tools.js" type="text/javascript"></script>
+<script src="/static/js/cert.js" type="text/javascript"></script>
+<script src="/static/js/jsbn.js"></script>
+<script src="/static/js/rsa.js"></script>
+<script src="/static/js/sha1.js"></script>
+<script type="text/javascript">var accountChanged = false;
+var phoneChanged = false;
+var updateDone = false;
+var bShowEmptyHp = true;
+
+$(document).ready(function() {
+    //개인정보-개인정보 이용내역 이동 시 scode가 필요해요.
+    var scode = window.location.href.slice(window.location.href.indexOf('?')+1)
+    $("#userinfolink").attr("href","/user/info?"+scode);
+    $("#uselistlink").attr("href","/user/uselist?"+scode);
+    
+    if ($('[name="email_domain_list"]').val() != 'direct')
+        $('[name="email_domain"]').attr('readonly', true);
+
+    $('[name="update"]').submit(function(event) {
+        if (updateDone)
+            return;
+
+        event.preventDefault();
+
+        try {
+            confirmUpdate($(this));
+            disableInput($(this), 'update');
+
+            var pub_key = RSA.getPublicKey("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvTyZayVGLAgsgCWsG2j1\n1lDB7fvvX6puRH4RBc91nedwqvW2NCYYXEofdKJtffn79DgcFBYjkUI6KkXubF\/S\nhW89yABDACIWdJ4y0fafCuQRQ9yMTQNfDBx9MJSUl1htRLNZZ4bCXxlUNITNpgSs\nXDPuRk4uYCijFkVeutrNg25OzD\/PZtYDbVlhsijvNDyRFEHIktDDVVL5f2CLa9E+\nSSs+84fmSUE54oJk1RVppu2HEifI4Yy+7RaGi05Gqji3JtUij71lMTAagp9D0hRi\n1npSuM5xeqrg8f\/AdMMsxQlGiw\/gdUwFAMNBZU8Svdrdp2XyPKlse6zfyDkTwjsm\n9wIDAQAB\n-----END PUBLIC KEY-----");
+            var arr = $(this).serializeArray();
+            var data = {};
+
+            for (var i = 0; i < arr.length; i++) {
+                var k = arr[i].name;
+                var v = arr[i].value;
+
+                switch (arr[i].name) {
+                case "password":
+                case "password_verify":
+                case "account_bank_id":
+                case "account_number":
+                    v = RSA.encrypt(v, pub_key); 
+                    break;
+                }
+
+                data[k] = v;
+            }
+
+            var handler = makeFormHandler($(this), function(success, message) {
+                $form = $('[name="update"]');
+                if (!success)
+                    enableInput($form, 'update');
+                if (success && !$form.find('[name="remove_photo"]').is(':checked') && $form.find('[name="photo"]').val()) {
+                    alert(message + ' 프로필 사진을 업로드 합니다.');
+                    updateDone = true;
+                    $form.attr('action', '/user/update_profile_photo');
+                    $form.submit();
+                    return false;
+                }
+            });
+
+            asyncJsonPost($(this).attr('action'), data, handler);
+
+/*
+            asyncJsonSubmit($(this), makeFormHandler($(this), function(success, message) {
+                $form = $('[name="update"]');
+                if (!success)
+                    enableInput($form, 'update');
+                if (success && !$form.find('[name="remove_photo"]').is(':checked') && $form.find('[name="photo"]').val()) {
+                    alert(message + ' 프로필 사진을 업로드 합니다.');
+                    updateDone = true;
+                    $form.attr('action', '/user/update_profile_photo');
+                    $form.submit();
+                    return false;
+                }
+            }));
+*/
+        } catch (err) {
+            handleFormException(err);
+        }
+
+       });
+
+    function checkCapsLock(e, layer)
+    {
+        var s = String.fromCharCode( e.which );
+        if ( s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey ) 
+        {
+            $(layer).show();
+            return false;
+        }
+        else
+        {
+            $(layer).hide();
+        }
+        return true;
+    }
+
+    function checkPasswordLength(password, layer)
+    {
+        if (password.length < 6 || password.length > 15) {
+            $(layer).find('p').html('6~15자 범위로 입력하셔야 합니다.');
+            $(layer).show();
+            return false;
+        }
+        else 
+        {
+            $(layer).hide();
+        }
+        return true;
+    }
+
+    function checkPasswordRepeat(password, layer)
+    {
+        var ch = '';
+        var cnt = 0;
+        for(var i=0;i<password.length;i++)
+        {
+            if(password.charAt(i)==ch)
+            {
+                cnt++;
+                if(cnt>=4)
+                {
+                    $(layer).find('p').html('4개 이상의 연속된 문자는 입력할 수 없습니다.');
+                    $(layer).show();
+                    return false;
+                }
+            }
+            else
+            {
+                cnt = 1;
+                ch = password.charAt(i);
+            }
+        }
+        $(layer).hide();
+        return true;
+    }
+
+    function checkPasswordComplexity(password, layer)
+    {
+        var checkVal = 0;
+        if (password.match(/[0-9]/g)!=null) checkVal++;
+        if (password.match(/[a-z]/g)!=null) checkVal++;
+        if (password.match(/[A-Z]/g)!=null) checkVal++;
+        if (password.match(/\W/g)!=null) checkVal++;
+
+        if(checkVal < 2)
+        {
+            $(layer).find('p').html('영문 대/소문자, 숫자, 특수문자 중 2개 이상 조합되어야 합니다.');
+            $(layer).show();
+            return false;
+        }
+        else
+        {
+            $(layer).hide();
+        }
+        return true;
+    }
+
+    $('[name="password"]').keypress(function(e)
+    {
+        checkCapsLock(e, '#pPwdCapsLock');
+    });
+
+    $('[name="password"]').keyup(function(e)
+    {
+        var inp = $(this).val();
+        if(inp.length == 0) 
+        {
+            $('#divPwdLayer').hide();
+            return;
+        }
+        if(checkPasswordLength(inp, '#divPwdLayer'))
+            if(checkPasswordRepeat(inp, '#divPwdLayer'))
+                checkPasswordComplexity(inp, '#divPwdLayer');
+    });
+
+    $('[name="password_verify"]').keypress(function(e)
+    {
+        checkCapsLock(e, '#pPwdVCapsLock');
+    });
+
+    $('[name="signup"] [name="auth_method"]').click(function() {
+        resetNameValidation();
+    });
+
+
+    $('[name="update"] [name^="hp"]').change(function() {
+        phoneChanged = true;
+        $('[name="update"] [name="phone_token"]').val('');
+
+        var $form = $('[name="update"]');
+        resetInput($form, 'validate_phone');
+        enableInput($form, 'validate_phone');
+        $('span.validate_phone').fadeOut('slow');
+    });
+
+    $('[name="update"] [name="send_phone_auth_code"]').click(function(event) {
+        event.preventDefault();
+
+        try {
+            var $form = $('[name="update"]');
+            confirmPhone($form);
+            asyncJsonPost('/user/validate_phone_prepare', $form.serialize(),
+                    makeFormHandler($form, function(success, message, data) {
+                if (success) {
+                    $('span.validate_phone').fadeIn('fast', function() {
+                        enableInput($form, 'validate_phone');
+                    });
+                }
+            }));
+        }
+        catch (err) {
+            handleFormException(err);
+        }
+    });
+
+    $('[name="update"] [name="allow_email"]').change(function() {
+        //if($(this).val() == 'N')
+        //    $('.mail_receive_layer').show();
+        //else
+        //    $('.mail_receive_layer').hide();
+    });
+
+
+    $('[name="update"] [name="validate_phone"]').click(function(event) {
+        event.preventDefault();
+
+        try {
+            var $form = $('[name="update"]');
+            confirmPhoneAuthCode($form);
+            disableInput($form, 'validate_phone');
+            asyncJsonPost('/user/validate_phone', $form.serialize(),
+                    makeFormHandler($form, function(success, message, data) {
+                if (success && data.token && data.token.length > 0) {
+                    $('[name="update"] [name="phone_token"]').val(data.token);
+                }
+                else {
+                    $('[name="update"] [name="phone_token"]').val('');
+                    enableInput($form, 'validate_phone');
+                }
+            }));
+        }
+        catch (err) {
+            handleFormException(err);
+        }
+    });
+
+    $('[name="update"] [name="email_domain_list"]').change(function() {
+        var emailDomain = $(this).val();
+        var $emailDomain = $('[name="email_domain"]');
+        if (emailDomain != 'direct') {
+            $emailDomain.val(emailDomain);
+            $emailDomain.attr('readonly', true);
+        }
+        else {
+            $emailDomain.removeAttr('readonly');
+            $emailDomain.val('');
+            $emailDomain.focus();
+        }
+    });
+
+    $('[name="update"] [name="find_zip"]').click(function(event) {
+        event.preventDefault();
+        window.open('/user/securezipcode','_edit_zipcode','scrollbars=yes,width=350,height=402');
+    });
+
+    $('[name="update"] [name^="account_"]').change(function() {
+        accountChanged = true;
+        $('[name="update"] [name="account_token"]').val('');
+
+        var $form = $('[name="update"]');
+        $('[name="update"] [name="refund_agree"]').attr('checked', false);
+        resetInput($form, 'validate_account');
+        enableInput($form, 'validate_account');
+    });
+
+    $('[name="update"] [name="validate_account"]').click(function(event) {
+        event.preventDefault();
+
+        var $form = $('[name="update"]');
+        try {
+            confirmAccount($form);
+            disableInput($form, 'validate_account');
+            asyncJsonPost('/user/validate_account', $form.serialize(), makeFormHandler($form, function(success, message, data) {
+                if (success && data.token && data.token.length > 0) {
+                    $('[name="update"] [name="account_token"]').val(data.token);
+                }
+                else {
+                    $('[name="update"] [name="account_token"]').val('');
+                    enableInput($form, 'validate_account');
+                }
+            }));
+        }
+        catch (err) {
+            handleFormException(err);
+        }
+    });
+
+    $('[name="update"] [name="refund_agree"]').change(function() {
+        if ($(this).is(':checked') && !$('[name="update"] [name="account_token"]').val()) {
+            $(this).attr('checked', false);
+            scrollToFocus($(this), '먼저 계좌인증을 하셔야 합니다.');
+        }
+    });
+});
+
+function zipcode() {
+    window.open('/user/securezipcode','_edit_zipcode','scrollbars=yes,width=350,height=402');
+}
+
+function addrinfo(zipcode, addr) {
+    var form = $('[name="update"]').get(0);
+
+    var arrZipcode = zipcode.split("-");
+    $(form.address_zip1).val(arrZipcode[0]);
+    $(form.address_zip2).val(arrZipcode[1]);
+    $(form.address_base).val(addr);
+    $(form.address_detail).focus();
+}
+
+function confirmUpdate($form) {
+    var form = $form.get(0);
+
+    confirmPassword($form);
+    confirmPhoneValidation($form);
+    confirmEmail($form);
+    confirmRefund($form);
+}
+
+
+function validatePassword(password)
+{
+    var checkVal = 0;
+    if (password.match(/[0-9]/g)!=null) checkVal++;
+    if (password.match(/[a-z]/g)!=null) checkVal++;
+    if (password.match(/[A-Z]/g)!=null) checkVal++;
+    if (password.match(/\W/g)!=null) checkVal++;
+
+    if (checkVal < 2)
+        throw {message:'비밀번호는 영문 대/소문자, 숫자, 특수문자 중 2개 이상 조합되어야 합니다.'};
+
+    var ch = '';
+    var cnt = 0;
+    for(var i=0;i<password.length;i++)
+    {
+        if(password.charAt(i)==ch)
+        {
+            cnt++;
+            if(cnt>=4)
+            {
+                throw {message:'4개 이상의 연속된 문자는 입력할 수 없습니다.'};
+            }
+        }
+        else
+        {
+            cnt = 1;
+            ch = password.charAt(i);
+        }
+    }
+
+    if (password.length < 6 || password.length > 15)
+        throw {message:'비밀번호는 6~15자 범위로 입력하셔야 합니다.'};
+}
+
+function confirmPassword($form) {
+    var form = $form.get(0);
+    var password = form.password.value;
+    if (password) {
+
+        try
+        {
+            validatePassword(password);
+        }
+        catch(e)
+        {
+            throw new FormException($form, 'password', e.message);
+        }
+
+        var passwordVerify = form.password_verify.value;
+        if (!passwordVerify)
+            throw new FormException($form, 'password_verify', '비밀번호 확인이 필요합니다.');
+
+        if (password != passwordVerify)
+            throw new FormException($form, 'password_verify', '비밀번호와 비밀번호 확인이 다릅니다.');
+    }
+}
+
+var checkPasswordTimer = null;
+
+function startCheckPassword(editbox)
+{
+    if (checkPasswordTimer == null)
+    {
+        var callback = function() {
+            try
+            {
+                var password = $(editbox).val();
+                if (password)
+                {
+                    validatePassword(password);
+                    $("#password_validate_disallow").hide();
+                    $("#password_validate_allow").show();
+                }
+                else
+                {
+                    $("#password_validate_disallow").hide();
+                    $("#password_validate_allow").hide();
+                }
+            }
+            catch(e)
+            {
+                $("#password_validate_disallow").show();
+                $("#password_validate_allow").hide();
+                //console.log(e.message);
+            }
+        };
+        checkPasswordTimer = setInterval(callback, 300);
+    }
+}
+
+function stopCheckPassword()
+{
+    if (checkPasswordTimer != null)
+    {
+        clearInterval(checkPasswordTimer);
+        checkPasswordTimer = null;
+    }
+}
+
+function confirmPhoneValidation($form) {
+    var form = $form.get(0);
+
+    if (bShowEmptyHp) {
+        if ($.trim(form.hp2.value) == "" || $.trim(form.hp3.value) == "") {
+            bShowEmptyHp = false;
+            throw new FormException($form, 'hp1', '핸드폰 번호를 입력해 주셔야 구매가 가능합니다.');
+        }
+    }
+
+    if (phoneChanged && ($.trim(form.hp2.value) || $.trim(form.hp3.value)) && !form.phone_token.value)
+        throw new FormException($form, 'send_phone_auth_code', '연락처를 변경하려면 휴대폰 인증을 하셔야 합니다.');
+}
+
+function confirmPhone($form) {
+    var form = $form.get(0);
+
+    if (!$.trim(form.hp2.value))
+        throw new FormException($form, 'hp2', '연락처를 입력해 주세요.');
+
+    if (!$.trim(form.hp3.value))
+        throw new FormException($form, 'hp3', '연락처를 입력해 주세요.');
+}
+
+function confirmPhoneAuthCode($form) {
+    var form = $form.get(0);
+
+    confirmPhone($form);
+
+    if (!$.trim(form.phone_auth_code.value))
+        throw new FormException($form, 'phone_auth_code', '인증 번호를 입력해 주세요.');
+}
+
+function confirmEmail($form) {
+    var form = $form.get(0);
+
+    var emailLocal = $.trim(form.email_local.value);
+    var emailDomain = $.trim(form.email_domain.value);
+
+    if (!emailLocal)
+        throw new FormException($form, 'email_local', '메일 주소를 입력해 주세요.');
+
+    if (emailLocal.length > 30)
+        throw new FormException($form, 'email_local', '메일 주소의 앞부분은 30자 이하이어야 합니다.');
+
+    if (!emailDomain)
+        throw new FormException($form, 'email_domain', '메일 주소를 입력해 주세요.');
+
+    if (emailDomain.length > 30)
+        throw new FormException($form, 'email_domain', '메일 주소의 뒷부분은 30자 이하이어야 합니다.');
+}
+
+function confirmRefund($form) {
+    var form = $form.get(0);
+
+    if ((accountChanged || form.account_token.value) && !form.refund_agree.checked) {
+        if (!confirm('환불계좌 설정 동의를 하지 않으면 환불계좌 정보가 변경되지 않습니다.\n\n계속하시겠습니까?'))
+            throw new FormException($form, 'refund_agree', '');
+    }
+}
+
+function confirmAccount($form) {
+    var form = $form.get(0);
+
+    var accountBankId = form.account_bank_id.value;
+    if (!accountBankId)
+        throw new FormException($form, 'account_bank_id', '은행명을 선택해 주세요.');
+
+    var accountNumber = $.trim(form.account_number.value);
+    if (!accountNumber)
+        throw new FormException($form, 'account_number', '계좌번호를 입력해 주세요.');
+    if (accountNumber.match(/[^0-9-]/))
+        throw new FormException($form, 'account_number', '계좌번호는 숫자 또는 - 문자만 사용 가능합니다.');
+}
+
+function confirmAllowEmail(result){
+    if(result=='N') {
+       $('#allow_email_Y').attr('checked',true);
+       $('#allow_email_N').attr('checked',false);
+    }
+    //$('.mail_receive_layer').hide();
+}
+
+function doChangeName(data)
+{
+    $.post("/user/changeUserName",data,function(resp){
+        resp = $.parseJSON(resp);
+        if(resp.success == "OK"){
+            var url = '/user/changeUserName/success';
+            $("#div_change_name").load(url);
+            $("#div_change_name").center().show();
+        }
+        else
+        {
+            var url = '/user/changeUserName/error';
+            $("#div_change_name").load(url);
+            $("#div_change_name").center().show();
+        }
+    });
+}
+
+function openChangeName()
+{
+    Cert.openMyCertWnd(function(seq, enc_data, opt_v1, opt_v2) {
+        if (enc_data.length > 0 && seq.length > 0) {
+            var data = {'auth_method':'bymycert', 'seq':seq, 'enc_data':enc_data, 'opt_v1':opt_v1, 'opt_v2':opt_v2};
+            doChangeName(data);
+        }
+        else {
+            alert('본인 인증에 실패하였습니다.');
+        }
+    });
+}
+
+function doSelfCert(data) {
+	$.post("/user/selfCert",data,function(resp){
+        resp = $.parseJSON(resp);
+        if(resp.success == "OK"){
+        	alert(resp['result']['message']);
+            location.reload();
+        }
+        else
+        {
+            alert('본인 인증에 실패하였습니다.');
+            location.reload();
+        }
+    });
+}
+
+function selfCertMobile() {
+	Cert.openMyCertWnd(function(seq, enc_data, opt_v1, opt_v2) {
+        if (enc_data.length > 0 && seq.length > 0) {
+            var data = {'auth_method':'bymycert', 'seq':seq, 'enc_data':enc_data, 'opt_v1':opt_v1, 'opt_v2':opt_v2};
+            doSelfCert(data);
+        }
+        else {
+            alert('본인 인증에 실패하였습니다.');
+        }
+    });
+}
+
+function selfCertIpin() { 
+	Cert.openIpinWnd(function(seq, enc_data, opt_v1, opt_v2) {
+        if (enc_data.length > 0 && seq.length > 0) {
+            var data = {'auth_method':'byipin', 'seq':seq, 'enc_data':enc_data, 'opt_v1':opt_v1, 'opt_v2':opt_v2};
+            doSelfCert(data);
+        }
+        else {
+            alert('본인 인증에 실패하였습니다.');
+        }
+    });
+}
+
+function show_layer(id, type)/*{{{*/
+{
+    if(type) {
+        $("#"+id).center(990);
+        $("#"+id).fadeIn();
+    } else {
+        $("#"+id).center().show();
+    }
+}/*}}}*/
+
+</script>
+
+<div class="mypage_inr">
+    <h3 class="tit"><span class="info">개인정보</span></h3>
+    <div class="myinfo">
+        <p class="desc2"> 
+            정보를 수정할 경우에는 <em>비밀번호를 꼭 다시 한번 확인</em>해 주세요.<br> 
+            SMS와 메일 수신에 동의하시면, 매일 매일 선택하신 관심지역의 딜 정보와 다양한 이벤트, 각종 할인/상품 정보에 대한 안내를 받아보실 수 있습니다.
+        </p>
+        <form name="update" action="/user/update" method="post" enctype="multipart/form-data">
+        <h4 class="subtit"><span class="basic">기본 정보</span></h4>
+        <table cellspacing="0" border="1">
+        <caption>기본정보</caption>
+        <colgroup><col width="131"><col width="">
+        </colgroup><tbody><tr class="first">
+            <th scope="row">이름</th>
+            <td>
+                <input type="text" value="민경훈" disabled="disabled" class="txt dimmed" style="width:179px">
+                <a href="javascript:openChangeName()" class="btn_cmn3 vm"><span class="in">이름변경</span></a>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">아이디</th>
+            <td>
+                <input type="text" value="sunnyziru" disabled="disabled" class="txt dimmed" style="width:179px">
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">본인 인증</th> 
+                        	<td>본인 인증 완료</td>
+            		</tr>
+        <tr>
+        <th scope="row">사진</th>
+            <td>
+                <div class="profile_photo"><img src="/static/images/nophoto_newLM.jpg" width="60" height="60">
+</div>
+                <p class="add_photo">
+                    <span style="visibility:hidden"><label class="chk_label" for="remove_photo">삭제: </label><input class="chk" id="remove_photo" type="checkbox" name="remove_photo" value="Y"></span>
+                    <br><label class="chk_label">변경: </label><input name="photo" type="file" accept="image/*">
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">새 비밀번호</th>
+            <td>
+                <input type="password" class="txt fl" style="width:168px" name="password" onfocus="startCheckPassword(this);" onfocusout="stopCheckPassword();">
+                <div class="uio_ly_balloon" style="left:355px;display:none;" id="password_validate_disallow"><div class="ly_member">보안등급 : <strong class="no">불가<span>X</span></strong><span class="arr"></span></div></div>
+                <div class="uio_ly_balloon" style="left:355px;display:none;" id="password_validate_allow"><div class="ly_member">보안등급 : <strong class="safe">안전<span>O</span></strong><span class="arr"></span></div></div>
+                <span class="guide">6~15자의 영문 대소문자, 숫자, 특수문자 2개이상 사용하실 수 있으며 연속된 숫자 및 문자(4개이상)제한 합니다.</span>
+                <p class="noti_capslock" id="pPwdCapsLock" style="display:none;"><span class="spr_ico ico_attention2">!</span> Caps Lock이 켜져 있습니다.</p>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">새 비밀번호 확인</th>
+            <td>
+                <input type="password" class="txt" style="width:168px" name="password_verify" value="">
+                <span class="guide">설정하신 비밀번호를 한번 더 입력해주세요.</span>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">이메일</th>
+            <td style="padding-bottom:4px">
+                <input type="text" class="txt" style="width:167px" name="email_local" value="fuckingtimo"> @
+                <input type="text" class="txt" style="width:118px" name="email_domain" value="hotmail.com" readonly="readonly"> 
+                <select style="width:124px" name="email_domain_list">
+                    <option value="direct">직접입력</option>
+                <option value="naver.com">naver.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="hanmail.net">hanmail.net</option>
+                <option value="nate.com">nate.com</option>
+                <option value="gmail.com">gmail.com</option>
+                <option value="paran.com">paran.com</option>
+                <option value="chol.com">chol.com</option>
+                <option value="dreamwiz.com">dreamwiz.com</option>
+                <option value="empal.com">empal.com</option>
+                <option value="freechal.com">freechal.com</option>
+                <option value="hanafos.com">hanafos.com</option>
+                <option value="hanmir.com">hanmir.com</option>
+                <option value="hitel.net">hitel.net</option>
+                <option value="hotmail.com" selected="selected">hotmail.com</option>
+                <option value="korea.com">korea.com</option>
+                <option value="lycos.co.kr">lycos.co.kr</option>
+                <option value="netian.com">netian.com</option>
+                <option value="yahoo.co.kr">yahoo.co.kr</option>
+                <option value="yahoo.com">yahoo.com</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="contact">
+            <th scope="row">연락처</th>
+            <td style="padding-bottom:4px">
+                <select style="width:71px" name="hp1">
+                    <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
+                <option value="0505">0505</option>
+                <option value="0502">0502</option>
+                </select> -
+                <input type="text" class="txt" style="width:76px" name="hp2" value=""> -
+                <input type="text" class="txt" style="width:76px" name="hp3" value="">
+                <button class="btn_cfm_mobile validate_phone" style="margin-right:30px" name="send_phone_auth_code">휴대폰 인증</button>
+                <span class="validate_phone" style="display:none"><strong>인증번호</strong>
+                    <input type="text" class="txt validate_phone" style="width:60px" name="phone_auth_code">
+                    <input type="hidden" name="phone_token">
+                    <button class="btn_cfm validate_phone" name="validate_phone">확인</button></span>
+
+                <div class="noti3">
+                    <p class="dsc">입력한 연락처와 메일로 다양한 혜택과 각종 할인/상품 정보에 대한 안내를 받겠습니다. <span>(거래정보와 관련된 내용은 수신동의 여부와 관계없이 발송됩니다.)</span></p>
+                    <div class="sel">
+                        <span><em class="bu"></em>SMS 수신동의</span>
+                        <input type="radio" name="allow_sms" value="Y"><label for="chk_1">예</label>
+                        <input type="radio" name="allow_sms" checked="checked" value="N"><label for="chk_2">아니요</label>
+                    </div>
+                    <div class="sel">
+                        <span><em class="bu"></em>메일 수신동의</span>
+                        <input type="radio" id="allow_email_Y" name="allow_email" value="Y"><label for="chk_1">예</label>
+                        <input type="radio" id="allow_email_N" name="allow_email" checked="checked" value="N"><label for="chk_2">아니요</label>
+                        <div class="mail_receive_layer" style="display:none">
+                            <p class="hidden"><strong>이메일 구독자에게만 드리는 혜택!<br>수신거부, 정말 괜찮으시겠어요?</strong></p>
+                            <p class="receive_lst">깜짝  적립금 선물 <br><em>E-mail Only</em> 상품<br>엄선된 <em>HOT</em> 상품<br>신상 <em>ITEM</em><br><em>Fun Life</em>를 위한 여행&amp;문화 정보</p>
+                            <a class="btn_yes" onclick="confirmAllowEmail('Y');">예</a>
+                            <a class="btn_no" onclick="confirmAllowEmail('N');">아니요</a>
+                            <a class="btn_clse" onclick="confirmAllowEmail('Y');">레이어 닫기</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr class="address">
+            <th scope="row">주소</th>
+            <td>
+                                <input type="text" class="txt" style="width:45px" name="address_zip1" value="" readonly="readonly"> -
+                <input type="text" class="txt" style="width:45px" name="address_zip2" value="" readonly="readonly">
+                <a href="#" name="find_zip" onclick="return false;">우편번호</a>
+                <p><input type="text" class="txt" style="width:289px" name="address_base" value="" readonly="readonly"></p>
+                <p><input type="text" class="txt" style="width:289px" name="address_detail" value=""></p>
+            </td>
+        </tr>
+        </tbody></table>
+
+        <h4 class="subtit"><span class="refund">환불 정보</span></h4>
+        <table cellspacing="0" border="1">
+        <caption>환불 정보</caption>
+        <colgroup><col width="131"><col width="">
+        </colgroup><tbody><tr class="refund_account">
+            <th scope="row">환불계좌</th>
+            <td>
+                <strong>은행명</strong>
+                <select style="width:231px" name="account_bank_id">
+                    <option value="">은행명을 선택하세요</option>
+                    <option value="35">경남은행</option>
+                <option value="29">광주은행</option>
+                <option value="7">국민은행</option>
+                <option value="5">기업은행</option>
+                <option value="15">농협중앙회</option>
+                <option value="17">농협협동조합</option>
+                <option value="25">대구은행</option>
+                <option value="47">도이치은행</option>
+                <option value="27">부산은행</option>
+                <option value="3">산업은행</option>
+                <option value="41">상호저축은행</option>
+                <option value="37">새마을금고</option>
+                <option value="11">수협중앙회</option>
+                <option value="60">신한은행</option>
+                <option value="39">신협중앙회</option>
+                <option value="9">외환은행</option>
+                <option value="19">우리은행</option>
+                <option value="56">우체국</option>
+                <option value="33">전북은행</option>
+                <option value="31">제주은행</option>
+                <option value="59">하나은행</option>
+                <option value="23">한국씨티은행</option>
+                <option value="45">HSBC은행</option>
+                <option value="21">SC제일은행</option>
+                </select><br>
+                <strong>계좌번호</strong>
+                                <input type="text" class="txt" style="width:223px" name="account_number">
+                ※<span class="notice"> '-'없이 숫자만 입력해 주세요.</span><br>
+                <strong>예금주</strong>
+                <input type="text" class="txt dimmed" style="width:223px" value="민경훈" disabled="disabled">
+                <input type="hidden" name="account_token">
+                <button name="validate_account" class="spr_btn btn_cfm_account2 validate_account">계좌인증</button>
+                ※<span class="notice"> 회원명과 동일한 예금주명의 계좌로만 인증이 가능합니다.</span><br>
+                <input type="checkbox" class="chk" id="refund_agree" name="refund_agree" value="Y">
+                <label for="refund_agree" class="chk_label">본계좌를 <span>환불계좌로 설정하는데 동의</span>합니다.</label>
+            </td>
+        </tr>
+        </tbody></table>
+
+        <input type="hidden" name="scode" value="d37f6a4a4a78e74e3db26f620f564b92cfe562cb2537de009">
+        <input type="hidden" name="ts" value="1400758281">
+        <input type="hidden" name="hash" value="8e54b823bc77d659957fd4721e9b04e7aac3f700">
+        </form>
+
+        <div class="btn_section">
+            <a href="#" class="btn_modify" onclick="$('form[name=update]').submit(); return false;">개인정보 수정하기</a>
+            <a href="/user/leave" class="btn_leave">회원탈퇴</a>
+        </div>
+    </div>
+</div>
+    </div>

@@ -1,0 +1,132 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    <script type="text/javascript">
+	
+		$(".topSearch").ready(function(){
+
+			$("#srch_value").keyup(function(){
+
+				if ($(this).val().replace(/ /g, '').length > 0)
+				{
+					$.ajax({
+					    type : "GET"
+					    , async : true
+					    , url : "search_ajax"
+					    , dataType : "html"
+					    , timeout : 3000
+					    , cache : false
+					    , data : "keyword=" + encodeURIComponent($(this).val()) 
+					    , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+					    , error : function(request, status, error) {
+							alert("code : " + request.status + "\r\n장애가 발생하였습니다.");
+							keyword_list_init();
+					    }
+					    , success : function(response, status, request) {
+							if (response.replace(/ /g, '').length > 20)
+							{
+								keyword_list_init();
+								$('.wrap_preview').append(response);
+								$(".wrap_preview").show();
+							}
+							else
+							{
+								keyword_list_init();
+							}
+					    }
+					});
+				}
+				else
+				{
+					keyword_list_init();
+				}
+				
+			});
+			
+			$("[name='k_list']").click(function(){
+				alert("!");
+				
+				$("#srch_value").val(key);
+				keyword_list_init();
+			
+			});
+			
+			search2 = function(key)
+			{
+				$("#srch_value").val(key);
+				keyword_list_init();
+			}
+			
+			keyword_list_init = function()
+			{
+				$(".wrap_preview").hide();
+				$(".wrap_preview").children().remove();
+			}
+
+		});
+	
+	</script>
+    
+<div class="nav">
+            <h1><a href="">bubble shop</a></h1>
+            <h2 class="hidden">글로벌 네비게이션</h2>
+            <ul class="menu">
+               <li class="m1">
+                  <h3><a href="">카테고리</a></h3>
+                  <ul>
+                     <li></li>
+                     <li></li>
+                     <li></li>
+                  </ul>
+               </li>
+               <li class="m2">
+                  <h3><a href="">브랜드</a></h3>
+                  <ul>
+                     <li></li>
+                     <li></li>
+                     <li></li>
+                  </ul>
+               </li>
+               <li class="m3">
+                  <h3><a href="">전문관</a></h3>
+                  <ul>
+                     <li></li>
+                     <li></li>
+                     <li></li>
+                  </ul>
+               </li>
+               <li class="m4">
+                  <h3><a href="">사용기</a></h3>
+                  <ul>
+                     <li></li>
+                     <li></li>
+                     <li></li>
+                  </ul>   
+               </li>
+            </ul>
+         </div>
+         <div class="wrap_quick">
+            <div class="inner">
+               <p class="client"><span>한지민</span>님 안녕하세요</p>
+               <h2 class="hidden">퀵메뉴</h2>
+               <ul class="quick_menu">
+                  <li><a href="/shop/bs/user/member/login">로그인</a></li>
+                  <li><a href="">회원가입</a></li>
+                  <li><a href="">마이페이지</a></li>
+                  <li><a href="">장바구니</a></li>
+                  <li><a href="">고객센터</a></li>
+                  <li><a href="">즐겨찾기</a></li>
+               </ul>
+            </div>
+         </div>
+         <div class="topSearch">
+            <form id="topSearchForm" name="topSearchForm" method="post" action="">
+               <fieldset>
+               <legend class="hidden">통합검색</legend>
+                  <label for="srch_value" class="hidden">통합검색</label>
+                  <input type="text" title="키워드" id="srch_value" class="searchBox" name="srch_value" value="" />
+                  <a class="btn_search" href="">검색</a>
+               </fieldset>
+            </form>
+         </div>
+         <div class="wrap_preview"></div>
